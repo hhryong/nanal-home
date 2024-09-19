@@ -1,0 +1,121 @@
+#dbName: MYSQL
+#dbDriverName: com.mysql.jdbc.Driver
+#dbUrl: "jdbc:mysql://119.65.229.186:3306/test_nuri?useSSL=false&useUnicode=true&characterEncoding=utf8"
+#dbUser: test_nuri
+#dbPassword: 1234
+
+# dbName: ORACLE
+# dbDriverName: oracle.jdbc.driver.OracleDriver
+# dbUrl: jdbc:oracle:thin:@119.65.229.186:49161:xe
+# dbUser: mgov
+# dbPassword: nanal1234!!
+
+dbName: ORACLE
+dbDriverName: oracle.jdbc.driver.OracleDriver
+dbUrl: jdbc:oracle:thin:@localhost:1521:xe
+dbUser: "c##test"
+dbPassword: 1234
+
+#dbName: TIBERO
+#dbDriverName: com.tmax.tibero.jdbc.TbDriver
+#dbUrl: jdbc:tibero:thin:@119.65.229.186:8629:tibero
+#dbUser: new_nuri
+#dbPassword: nanal1234!
+
+#dbName: MSSQL
+#dbDriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#dbUrl: jdbc:sqlserver://localhost:1433;database=NEW_NURI
+#dbUser: sa
+#dbPassword: 1234
+
+#dbName: CUBRID
+#dbDriverName: cubrid.jdbc.driver.CUBRIDDriver
+#dbUrl: "jdbc:cubrid:localhost:33000:NEW_NURI:::?charset=UTF-8"
+#dbUser:
+#dbPassword:
+
+#dbName: ALTIBASE
+#dbDriverName: Altibase.jdbc.driver.AltibaseDriver
+#dbUrl: "jdbc:Altibase://192.168.170.128:20300/mydb?encoding=MS949"
+#dbUser: nanal_test
+#dbPassword: password
+
+# dbName: POSTGRESQL
+# dbDriverName: org.postgresql.Driver
+# dbUrl: jdbc:postgresql://119.65.229.186:5432/postgres
+# dbUser: postgres
+# dbPassword: 1234
+
+dbCharset: UTF8
+
+gwIp: [192.168.50.102]
+gwPort: [30000]
+gwClientId: nanalsmi02
+gwClientPwd: 0b8cb9ad69b5e1161be04f1a18fa4fa8
+#msgDataSeq: AUTO
+msgDataSeq: DEFAULT
+#msgDataSeq: msg_data_seq
+#msgContentsInfoSeq: AUTO
+msgContentsInfoSeq: DEFAULT
+#msgContentsInfoSeq: msg_data_seq
+appSendContentsTableName: APP_SEND_CONTENTS111
+appSendDataTableName: APP_SEND_DATA111
+appSendDataLogTableName: APP_SEND_DATA_LOG111
+templateCodeTableName: TEMPLATE_CODE
+msgDataTableName: NURI_MSG_DATA
+msgContentsInfoTableName: NURI_MMS_CONTENTS_INFO
+
+useLms: yes 
+copyCustomColumnWhenSendLms: yes
+
+loggerLevel: INFO
+
+logRealTime: yes
+makeLogMode: ONE
+
+retryTime: 1
+retryCount: 0
+sendLmsWhenRetryEnd: no
+sendLmsWhenConnectionFail: yes
+
+socketConnectionTimeOut: 5
+
+maxCustomColumnIndexCount: 10
+
+customColumnForAppSendData:
+  - COLUMN1 VARCHAR(100)
+#   - COLUMN2 VARCHAR(300)
+#   - COLUMN3 INT
+#   - COLUMN4 INT
+#   - COLUMN5 INT
+
+customIndex:
+  - indexName: TEST_INDEX
+    columns: SUB_ID DESC, CALL_BACK ASC
+#  - indexName: test2
+#    columns: test2 desc, test2 asc
+
+logSaveTerm: 1
+
+logFilePath: ./gaon_log
+
+tranTerm: 1
+
+beforeTime: 3
+
+duplicatePhoneCount: 0
+
+timeoutLimit: 30
+
+groupMessageCount: 100
+
+authCount: 2
+authTime: 1
+
+noSendTimeStart: 18:00:00
+noSendTimeEnd: 09:00:00
+
+logTerm: 1
+isTransferLog: yes
+#excludeLmsError: ['3011', '9991', '9992']
+lmsIncludeHeader: no

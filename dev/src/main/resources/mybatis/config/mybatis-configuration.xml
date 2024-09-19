@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="com.nanal.dto.TableCommentDTO" alias="TableCommentDTO" />
+        <typeAlias type="com.nanal.dto.AppSendData" alias="sendData" />
+        <typeAlias type="com.nanal.dto.AppSendContents" alias="sendContents" />
+        <typeAlias type="com.nanal.dto.LmsContentsInfo" alias="LmsContentsInfo" />
+        <typeAlias type="com.nanal.dto.LmsDataInfo" alias="LmsDataInfo" />
+        <typeAlias type="com.nanal.dto.AppResultData" alias="AppResultData" />
+        <typeAlias type="com.nanal.setting.TemplateCodeInfo" alias="TemplateCodeInfo" />
+        <typeAlias type="com.nanal.dto.AppSendData" alias="AppSendData" />
+        <typeAlias type="com.nanal.setting.CustomIndexInfo" alias="CustomIndexInfo" />
+    </typeAliases>
+</configuration>

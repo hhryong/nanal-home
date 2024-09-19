@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="createTable.POSTGRESQL">
+    <select id="createAppSendContents" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+            REQ_SEND_DATE CHAR(14),
+            PACK_UNIQUEKEY SERIAL ,
+            MSG_SUBJECT VARCHAR(50) ,
+            MSG_DATA VARCHAR(3000) NOT NULL,
+            MSG_TYPE CHAR(2) NOT NULL,
+            HEADER VARCHAR(32) ,
+            BTN_CNT INT DEFAULT 0 ,
+            ATTACHMENT VARCHAR(5000) ,
+            LINK_CNT INT DEFAULT 0 ,
+            SUPPLEMENT VARCHAR(5000) ,
+            PHONE_CNT INT DEFAULT 0 NOT NULL,
+            CUR_STATE INT DEFAULT 0,
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        PRIMARY KEY (PACK_UNIQUEKEY)
+        )
+    </select>
+
+    <select id="createAppSendData" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+            MSG_SEQ SERIAL,
+            REQ_SEND_DATE CHAR(14) NOT NULL,
+            PACK_UNIQUEKEY INT,
+            PHONE_NUM VARCHAR(12) NOT NULL,
+            NURI_MSG_SEQ INT,
+            USER_SEQ INT,
+            CUR_STATE INT DEFAULT 0,
+            APP_GUBUN VARCHAR(8) NOT NULL,
+            CALL_BACK VARCHAR(12) NOT NULL,
+            SUB_ID VARCHAR(30),
+            GAON_MSG_TYPE CHAR(1) NOT NULL,
+            SMS_MSG_DATA VARCHAR(135),
+            TEMPLATE_CODE VARCHAR(40) NOT NULL,
+            RSLT_CODE_APP CHAR(4),
+            MODULE_SEND_TIME CHAR(14),
+            SVR_RECV_TIME CHAR(14),
+            APP_SEND_TIME CHAR(14),
+            APP_RECV_TIME CHAR(14),
+            SERIAL_NUMBER VARCHAR(39),
+            SEND_PACK_UKEY INT,
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        PRIMARY KEY (MSG_SEQ)
+        )
+    </select>
+
+    <select id="createAppSendDataForLog" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+        MSG_SEQ INT,
+        REQ_SEND_DATE CHAR(14) NOT NULL,
+        PACK_UNIQUEKEY INT,
+        PHONE_NUM VARCHAR(12) NOT NULL,
+        NURI_MSG_SEQ INT,
+        USER_SEQ INT,
+        CUR_STATE INT DEFAULT 0,
+        APP_GUBUN VARCHAR(8),
+        CALL_BACK VARCHAR(12) NOT NULL,
+        SUB_ID VARCHAR(30),
+        GAON_MSG_TYPE CHAR(1) NOT NULL,
+        SMS_MSG_DATA VARCHAR(135),
+        TEMPLATE_CODE VARCHAR(40) NOT NULL,
+        RSLT_CODE_APP CHAR(4),
+        MODULE_SEND_TIME CHAR(14),
+        SVR_RECV_TIME CHAR(14),
+        APP_SEND_TIME CHAR(14),
+        APP_RECV_TIME CHAR(14),
+        SERIAL_NUMBER VARCHAR(39),
+        SEND_PACK_UKEY INT
+        <!-- RESEND_COUNT INT -->
+        <if test="customColumn != null">
+            , ${customColumn}
+        </if>
+        )
+    </select>
+
+    <select id="checkTableExists" parameterType="HashMap" resultType="int">
+        SELECT COUNT(*)
+        FROM pg_catalog.pg_tables
+        WHERE tablename = #{tableName}
+    </select>
+
+    <select id="createTemplateCode" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+            APP_GUBUN     VARCHAR(8)   NOT NULL,
+            TEMPLATE_CODE VARCHAR(40)  NOT NULL,
+            HEAD          VARCHAR(500) NOT NULL,
+            FOOT          VARCHAR(500),
+            TITLE         VARCHAR(100),
+            USE_BUTTON    CHAR(1) DEFAULT 'N',
+            PRIMARY KEY (APP_GUBUN, TEMPLATE_CODE)
+        )
+    </select>
+
+    <select id="getDbTime" resultType="Date">
+        select now()
+    </select>
+
+    <select id="resendCountColumnAdd">
+        ALTER TABLE ${value} ADD COLUMN RESEND_COUNT INT DEFAULT 0
+    </select>
+
+    <select id="createColumn" parameterType="HashMap">
+        ALTER TABLE ${TABLE_NAME} ADD COLUMN ${COLUMN_NAME} ${COLUMN_TYPE}
+    </select>
+</mapper>

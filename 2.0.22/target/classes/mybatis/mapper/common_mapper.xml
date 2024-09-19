@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+    <select id="createIndex" parameterType="com.nanal.setting.CustomIndexInfo">
+        CREATE INDEX ${indexName} ON ${targetTableName} (${columns})
+    </select>
+
+    <select id="addColumnComment" parameterType="TableCommentDTO">
+        COMMENT ON COLUMN ${tableName}.${columnName} IS '${comment}'
+    </select>
+    
+    <select id="createUniqueIndex" parameterType="CustomIndexInfo">
+        CREATE UNIQUE INDEX ${indexName} ON ${targetTableName} (${columns})
+    </select>
+</mapper>

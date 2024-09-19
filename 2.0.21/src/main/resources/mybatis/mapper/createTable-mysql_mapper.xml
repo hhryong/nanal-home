@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="createTable.MYSQL">
+    <select id="createAppSendContents" parameterType="HashMap">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (
+        REQ_SEND_DATE CHAR(14) COMMENT '메시지를 DB에 넣은 시간 (yyyymmddHHMMSS)',
+        PACK_UNIQUEKEY INT(11) AUTO_INCREMENT NOT NULL COMMENT '일련번호',
+        MSG_SUBJECT VARCHAR(50) COMMENT '메시지 제목',
+        MSG_DATA VARCHAR(3000) NOT NULL COMMENT '메시지 내용',
+        MSG_TYPE CHAR(2) NOT NULL COMMENT '메시지 타입 AT로 고정',
+        HEADER VARCHAR(32) COMMENT '카카오알림톡 헤더',
+        BTN_CNT INT(1) DEFAULT 0 COMMENT '버튼 개수 (현재 최대 1개)',
+        ATTACHMENT VARCHAR(5000) COMMENT '버튼 내용',
+        LINK_CNT INT(1) DEFAULT 0 COMMENT '카카오 바로연결 개수(최대 1개)',
+        SUPPLEMENT VARCHAR(5000) COMMENT '카카오 바로연결 내용',
+        PHONE_CNT INT(11) DEFAULT 0 NOT NULL COMMENT '연락처 개수',
+        CUR_STATE INT(1) DEFAULT 0 COMMENT '메시지 상태',
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        PRIMARY KEY (PACK_UNIQUEKEY)
+        ) CHARACTER SET ${charset}
+    </select>
+
+    <select id="createAppSendData" parameterType="HashMap">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (
+        MSG_SEQ INT AUTO_INCREMENT NOT NULL COMMENT '일련번호',
+        REQ_SEND_DATE CHAR(14) NOT NULL COMMENT '메시지를 DB에 넣은 시간 (yyyymmddHHMMSS) 미래 시간을 넣으면 예약발송',
+        PACK_UNIQUEKEY INT COMMENT 'APP_SEND_CONTENTS의 PACK_UNIQUEKEY GAON_MSG_TYPE이 S인 경우 불필요',
+        PHONE_NUM VARCHAR(12) NOT NULL COMMENT '수신 연락처',
+        NURI_MSG_SEQ INT COMMENT '발송 실패시 누리 테이블에 입력된 MSG_SEQ값',
+        USER_SEQ INT,
+        CUR_STATE INT DEFAULT 0 COMMENT '메시지 상태',
+        APP_GUBUN VARCHAR(8) NOT NULL COMMENT '앱구분 KAKAO, NAVER, TOSS',
+        CALL_BACK VARCHAR(12) NOT NULL COMMENT '발신 연락처',
+        SUB_ID VARCHAR(30) COMMENT 'SUB_ID',
+        GAON_MSG_TYPE CHAR(1) NOT NULL COMMENT '메시지 타입 L(장문), S(단문)',
+        SMS_MSG_DATA VARCHAR(135) COMMENT '메시지 타입이 S(단문)인 경우 메시지 내용',
+        TEMPLATE_CODE VARCHAR(40) NOT NULL COMMENT '템플릿 코드',
+        RSLT_CODE_APP CHAR(4) COMMENT '발신 후 결과 코드',
+        MODULE_SEND_TIME CHAR(14) COMMENT '모듈에서 서버로 발송한 시간',
+        SVR_RECV_TIME CHAR(14) COMMENT '서버로부터 레포트 결과를 받은 시간',
+        APP_SEND_TIME CHAR(14) COMMENT '서버에서 앱메시지를 보낸 시간',
+        APP_RECV_TIME CHAR(14) COMMENT '서버에서 앱메시지 결과를 받은 시간',
+        SERIAL_NUMBER VARCHAR(39) COMMENT '시리얼 넘버',
+        SEND_PACK_UKEY INT,
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        PRIMARY KEY (MSG_SEQ)
+        ) CHARACTER SET ${charset}
+    </select>
+
+    <select id="createAppSendDataForLog" parameterType="HashMap">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (
+        MSG_SEQ INT NOT NULL,
+        REQ_SEND_DATE CHAR(14) NOT NULL,
+        PACK_UNIQUEKEY INT,
+        PHONE_NUM VARCHAR(12) NOT NULL,
+        NURI_MSG_SEQ INT,
+        USER_SEQ INT,
+        CUR_STATE INT DEFAULT 0,
+        APP_GUBUN VARCHAR(8),
+        CALL_BACK VARCHAR(12) NOT NULL,
+        SUB_ID VARCHAR(30),
+        GAON_MSG_TYPE CHAR(1) NOT NULL,
+        SMS_MSG_DATA VARCHAR(135),
+        TEMPLATE_CODE VARCHAR(40) NOT NULL,
+        RSLT_CODE_APP CHAR(4),
+        MODULE_SEND_TIME CHAR(14),
+        SVR_RECV_TIME CHAR(14),
+        APP_SEND_TIME CHAR(14),
+        APP_RECV_TIME CHAR(14),
+        SERIAL_NUMBER VARCHAR(39),
+        SEND_PACK_UKEY INT
+        <!-- RESEND_COUNT INT -->
+        <if test="customColumn != null">
+            , ${customColumn}
+        </if>
+        ) CHARACTER SET ${charset}
+    </select>
+
+    <select id="checkTableExists" parameterType="HashMap" resultType="int">
+        SELECT COUNT(*)
+        FROM information_schema.TABLES
+        WHERE TABLE_NAME = #{tableName} AND TABLE_SCHEMA = #{tableSchema}
+    </select>
+
+    <select id="createTemplateCode" parameterType="HashMap">
+        CREATE TABLE IF NOT EXISTS ${tableName}
+        (
+            APP_GUBUN     VARCHAR(8)   NOT NULL,
+            TEMPLATE_CODE VARCHAR(40)  NOT NULL,
+            HEAD          VARCHAR(500) NOT NULL,
+            FOOT          VARCHAR(500),
+            TITLE         VARCHAR(100),
+            USE_BUTTON    CHAR(1) DEFAULT 'N',
+            PRIMARY KEY (APP_GUBUN, TEMPLATE_CODE)
+        ) CHARACTER SET ${charset}
+    </select>
+
+    <select id="getDbTime" resultType="Date">
+        select now()
+    </select>
+
+    <select id="resendCountColumnAdd">
+        ALTER TABLE ${value} ADD RESEND_COUNT INT DEFAULT 0
+    </select>
+
+    <select id="createColumn" parameterType="HashMap">
+        ALTER TABLE ${TABLE_NAME} ADD ${COLUMN_NAME} ${COLUMN_TYPE}
+    </select>
+</mapper>

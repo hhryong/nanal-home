@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/2.0.20/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/2.0.20/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/2.0.21/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/2.0.21/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/2.0.22/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/2.0.22/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java/META-INF/view/admin/account/list.jsp" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java/META-INF/view/admin/account/orgClient.jsp" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java/META-INF/view/admin/account/teamClient.jsp" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java/META-INF/view/admin/account/template/list.jsp" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/java/META-INF/view/admin/account/template/view.jsp" charset="EUC-KR" />
+    <file url="file://$PROJECT_DIR$/dev/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

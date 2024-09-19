@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="createTable.TIBERO">
+    <select id="createAppSendContents" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+        REQ_SEND_DATE CHAR(14),
+        PACK_UNIQUEKEY NUMBER(11) NOT NULL,
+        MSG_SUBJECT VARCHAR2(50),
+        MSG_DATA VARCHAR2(3000) NOT NULL,
+        MSG_TYPE CHAR(2) NOT NULL,
+        HEADER VARCHAR2(32),
+        BTN_CNT NUMBER(1) DEFAULT 0,
+        ATTACHMENT CLOB,
+        LINK_CNT NUMBER(1) DEFAULT 0,
+        SUPPLEMENT CLOB,
+        PHONE_CNT NUMBER(11) DEFAULT 0 NOT NULL,
+        CUR_STATE NUMBER(1) DEFAULT 0,
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        CONSTRAINT ${tableName}_PK PRIMARY KEY
+        (
+        PACK_UNIQUEKEY
+        )
+        )
+    </select>
+
+    <select id="createAppSendData" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+        MSG_SEQ NUMBER(11) NOT NULL,
+        REQ_SEND_DATE CHAR(14) NOT NULL,
+        PACK_UNIQUEKEY NUMBER(11),
+        PHONE_NUM VARCHAR2(12) NOT NULL,
+        NURI_MSG_SEQ NUMBER(11),
+        USER_SEQ NUMBER(11),
+        CUR_STATE NUMBER(1) DEFAULT 0,
+        APP_GUBUN VARCHAR2(8) NOT NULL,
+        CALL_BACK VARCHAR2(12) NOT NULL,
+        SUB_ID VARCHAR2(30),
+        GAON_MSG_TYPE CHAR(1) NOT NULL,
+        SMS_MSG_DATA VARCHAR2(135),
+        TEMPLATE_CODE VARCHAR2(40) NOT NULL,
+        RSLT_CODE_APP CHAR(4),
+        MODULE_SEND_TIME CHAR(14),
+        SVR_RECV_TIME CHAR(14),
+        APP_SEND_TIME CHAR(14),
+        APP_RECV_TIME CHAR(14),
+        SERIAL_NUMBER VARCHAR2(39),
+        SEND_PACK_UKEY NUMBER(11),
+        <!-- RESEND_COUNT NUMBER(11) DEFAULT 0, -->
+        <if test="customColumn != null">
+            ${customColumn}
+        </if>
+        CONSTRAINT ${tableName}_PK PRIMARY KEY
+        (
+        MSG_SEQ
+        )
+        ENABLE
+        )
+    </select>
+
+    <select id="createAppSendDataForLog" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+        MSG_SEQ NUMBER(11) NOT NULL,
+        REQ_SEND_DATE CHAR(14) NOT NULL,
+        PACK_UNIQUEKEY NUMBER(11),
+        PHONE_NUM VARCHAR2(12) NOT NULL,
+        NURI_MSG_SEQ NUMBER(11),
+        USER_SEQ NUMBER(11),
+        CUR_STATE NUMBER(1) DEFAULT 0,
+        APP_GUBUN VARCHAR2(8),
+        CALL_BACK VARCHAR2(12) NOT NULL,
+        SUB_ID VARCHAR2(30),
+        GAON_MSG_TYPE CHAR(1) NOT NULL,
+        SMS_MSG_DATA VARCHAR2(135),
+        TEMPLATE_CODE VARCHAR2(40) NOT NULL,
+        RSLT_CODE_APP CHAR(4),
+        MODULE_SEND_TIME CHAR(14),
+        SVR_RECV_TIME CHAR(14),
+        APP_SEND_TIME CHAR(14),
+        APP_RECV_TIME CHAR(14),
+        SERIAL_NUMBER VARCHAR2(39),
+        SEND_PACK_UKEY NUMBER(11)
+        <if test="customColumn != null">
+            , ${customColumn}
+        </if>
+        )
+    </select>
+
+    <select id="checkTableExists" resultType="int">
+        SELECT COUNT(*)
+        FROM ALL_TABLES
+        WHERE TABLE_NAME = #{tableName}
+    </select>
+
+    <select id="createTemplateCode" parameterType="HashMap">
+        CREATE TABLE ${tableName}
+        (
+            APP_GUBUN VARCHAR2(8) NOT NULL,
+            TEMPLATE_CODE VARCHAR2(40) NOT NULL,
+            HEAD          VARCHAR2(500) NOT NULL,
+            FOOT          VARCHAR2(500),
+            TITLE         VARCHAR2(100),
+            USE_BUTTON    CHAR(1) DEFAULT 'N',
+            CONSTRAINT    ${value}_PK PRIMARY KEY
+                (
+                APP_GUBUN, TEMPLATE_CODE
+                )
+        )
+    </select>
+
+    <select id="getDbTime" resultType="Date">
+        SELECT SYSTIMESTAMP FROM dual
+    </select>
+
+    <select id="resendCountColumnAdd">
+        ALTER TABLE ${value} ADD RESEND_COUNT NUMBER(11) DEFAULT 0
+    </select>
+
+    <select id="createColumn" parameterType="HashMap">
+        ALTER TABLE ${TABLE_NAME} ADD ${COLUMN_NAME} ${COLUMN_TYPE}
+    </select>
+</mapper>

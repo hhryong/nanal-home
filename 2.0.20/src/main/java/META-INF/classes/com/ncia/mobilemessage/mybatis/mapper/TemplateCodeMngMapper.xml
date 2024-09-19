@@ -1,0 +1,765 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="template">
+	<resultMap id="apiTemplateResultMap" type="HashMap">
+		<result property="seq" column="SEQ" jdbcType="INTEGER" javaType="int" />
+		<result property="clientId" column="CLIENT_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="appGubun" column="APP_GUBUN" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="templateCode" column="TEMPLATE_CODE" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="header" column="HEADER" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="status" column="STATUS" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="example1" column="EXAMPLE1" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="example2" column="EXAMPLE2" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="example3" column="EXAMPLE3" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="example4" column="EXAMPLE4" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="example5" column="EXAMPLE5" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="regiDate" column="REGI_DATE" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="reportDate" column="REPORT_DATE" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="buttonName" column="BUTTON_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="useHttps" column="USE_HTTPS" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="rejectReason" column="REJECT_REASON" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="kakaoChannelId" column="KAKAO_CHANNEL_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="kakaoKey" column="KAKAO_KEY" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="naverChannelId" column="NAVER_CHANNEL_ID" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="naverKey" column="NAVER_KEY" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<result property="isActivated" column="IS_ACTIVATED" jdbcType="VARCHAR" javaType="java.lang.String" />
+	</resultMap>
+
+
+	<select id="getTemplateCodeMngListWithClientInfo" parameterType="TemplateCodeMngDTO" resultType="TemplateCodeMngDTO">
+		SELECT 
+			*
+		FROM (
+			SELECT 
+			    ntm.SEQ ,
+			    ntm.CLIENT_ID ,
+			    ntm.APP_GUBUN ,
+			    ntm.TEMPLATE_CODE ,
+			    ntm.HEADER ,
+			    ntm.STATUS ,
+			    ntm.REJECT_REASON ,
+			    ntm.EXAMPLE1 ,
+			    ntm.EXAMPLE2 ,
+			    ntm.EXAMPLE3 ,
+			    ntm.EXAMPLE4 ,
+			    ntm.EXAMPLE5 ,
+			    ntm.REGI_DATE,
+			    ntm.REPORT_DATE,
+			    ntm.DONE_DATE,
+			    ntm.BUTTON_NAME ,
+			    ntm.IS_ACTIVATED,
+			    nu.CLIENT_NAME ,
+			    nu.ORG_NAME ,
+			    nu.GROUP_NAME ,
+			    nu.ORG_DEPT,
+			    bs.KAKAO_CHANNEL_ID ,
+			    bs.KAKAO_KEY ,
+			    bs.NAVER_CHANNEL_ID ,
+			    bs.NAVER_KEY ,
+			    ROW_NUMBER() OVER (ORDER BY ntm.SEQ DESC) AS RN,
+			    ROW_NUMBER() OVER (ORDER BY ntm.SEQ ) AS ROW_NUM
+			FROM MGOV.NM_TEMPLATECODE_MNG ntm 
+			LEFT JOIN MGOV.NM_USER nu ON ntm.CLIENT_ID = nu.CLIENT_ID 
+			LEFT JOIN MGOV.BIZM_SENDERKEY bs ON nu.CLIENT_ID = bs.CLIENT_ID 
+			<where>
+				<if test="seq > 0">
+					ntm.SEQ = #{seq}
+				</if>
+				<if test="clientId != null and clientId != ''">
+					AND ( ntm.CLIENT_ID = #{clientId} OR nu.MASTER_ID = #{clientId} ) 
+				</if>
+				<if test="kakaoChannelId != null and kakaoChannelId != ''">
+					AND bs.KAKAO_CHANNEL_ID LIKE '%' || #{kakaoChannelId} || '%'
+				</if>
+				<if test="appGubun != null and appGubun != ''">
+					AND ntm.APP_GUBUN = #{appGubun}
+				</if>
+				<if test="orgName != null and orgName != ''">
+					AND nu.ORG_NAME LIKE '%' || #{orgName} || '%'
+				</if>
+				<if test="orgDept != null and orgDept != ''">
+					AND nu.ORG_DEPT LIKE '%' || #{orgDept} || '%'
+				</if>
+				<if test="groupName != null and groupName != ''">
+					AND nu.GROUP_NAME LIKE '%' || #{groupName} || '%'
+				</if>
+				<if test="templateCode != null and templateCode != ''">
+					AND ntm.TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+				</if>
+				<if test="statusArray != null">
+					AND ntm.STATUS IN 
+					<foreach item="item" collection="statusArray" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+				</if>
+				<if test="isActivated != null and isActivated != ''">
+					AND ntm.IS_ACTIVATED = #{isActivated}
+				</if>
+				<if test='kakaoKey == "Y"'>
+					AND bs.KAKAO_KEY IS NOT NULL
+				</if>
+				<if test='kakaoKey == "N"'>
+					AND bs.KAKAO_KEY IS NULL
+				</if>
+			</where>
+		)
+		<![CDATA[ WHERE  RN >= #{start} AND RN <= #{end} ]]>
+	</select>
+	
+	<select id="getTemplateCodeMngWithClientInfo" parameterType="TemplateCodeMngDTO" resultType="TemplateCodeMngDTO">
+		SELECT 
+		    ntm.SEQ ,
+		    ntm.CLIENT_ID ,
+		    ntm.APP_GUBUN ,
+		    ntm.TEMPLATE_CODE ,
+		    ntm.HEADER ,
+		    ntm.STATUS ,
+		    ntm.REJECT_REASON ,
+		    ntm.EXAMPLE1 ,
+		    ntm.EXAMPLE2 ,
+		    ntm.EXAMPLE3 ,
+		    ntm.EXAMPLE4 ,
+		    ntm.EXAMPLE5 ,
+		    ntm.REGI_DATE,
+		    ntm.BUTTON_NAME ,
+		    ntm.USE_HTTPS,
+		    ntm.REPORT_DATE,
+		    ntm.IS_ACTIVATED,
+		    nu.CLIENT_NAME ,
+		    nu.ORG_NAME ,
+		    nu.GROUP_NAME ,
+		    nu.ORG_DEPT ,
+		    bs.KAKAO_CHANNEL_ID ,
+		    bs.KAKAO_KEY ,
+		    bs.NAVER_CHANNEL_ID ,
+		    bs.NAVER_KEY
+		FROM MGOV.NM_TEMPLATECODE_MNG ntm 
+		LEFT JOIN MGOV.NM_USER nu ON ntm.CLIENT_ID = nu.CLIENT_ID 
+		LEFT JOIN MGOV.BIZM_SENDERKEY bs ON nu.CLIENT_ID = bs.CLIENT_ID 
+		<where>
+			<if test="seq > 0">
+				ntm.SEQ = #{seq}
+			</if>
+			<if test="clientId != null and clientId != ''">
+				AND ( ntm.CLIENT_ID = #{clientId} OR nu.MASTER_ID = #{clientId} ) 
+			</if>
+			<if test="appGubun != null and appGubun != ''">
+				AND ntm.APP_GUBUN = #{appGubun}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND nu.ORG_NAME LIKE '%' || #{orgName} || '%'
+			</if>
+			<if test="orgDept != null and orgDept != ''">
+				AND nu.ORG_DEPT LIKE '%' || #{orgDept} || '%'
+			</if>
+			<if test="groupName != null and groupName != ''">
+				AND nu.GROUP_NAME LIKE '%' || #{groupName} || '%'
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				AND ntm.TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+			</if>
+			<if test="statusArray != null">
+				AND ntm.STATUS IN 
+				<foreach item="item" collection="statusArray" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="countTemplateCodeMngWithClientInfo" parameterType="TemplateCodeMngDTO" resultType="int">
+		SELECT 
+		    COUNT(*)
+		FROM MGOV.NM_TEMPLATECODE_MNG ntm 
+		LEFT JOIN MGOV.NM_USER nu ON ntm.CLIENT_ID = nu.CLIENT_ID 
+		LEFT JOIN MGOV.BIZM_SENDERKEY bs ON nu.CLIENT_ID = bs.CLIENT_ID 
+		<where>
+			<if test="clientId != null and clientId != ''">
+				( ntm.CLIENT_ID = #{clientId} OR nu.MASTER_ID = #{clientId} ) 
+			</if>
+			<if test="kakaoChannelId != null and kakaoChannelId != ''">
+				AND bs.KAKAO_CHANNEL_ID LIKE '%' || #{kakaoChannelId} || '%'
+			</if>
+			<if test="appGubun != null and appGubun != ''">
+				AND ntm.APP_GUBUN = #{appGubun}
+			</if>
+			<if test="orgName != null and orgName != ''">
+				AND nu.ORG_NAME LIKE '%' || #{orgName} || '%'
+			</if>
+			<if test="orgDept != null and orgDept != ''">
+				AND nu.ORG_DEPT LIKE '%' || #{orgDept} || '%'
+			</if>
+			<if test="groupName != null and groupName != ''">
+				AND nu.GROUP_NAME LIKE '%' || #{groupName} || '%'
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				AND ntm.TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+			</if>
+			<if test="statusArray != null">
+				AND ntm.STATUS IN 
+				<foreach item="item" collection="statusArray" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="isActivated != null and isActivated != ''">
+				AND ntm.IS_ACTIVATED = #{isActivated}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 엑셀 다운로드 용 -->
+	<select id="getTemplateCodeMngListWithClientInfo2" parameterType="TemplateCodeMngDTO" resultType="TemplateCodeMngDTO">
+		SELECT 
+		    ntm.SEQ ,
+		    ntm.CLIENT_ID ,
+		    ntm.APP_GUBUN ,
+		    ntm.TEMPLATE_CODE ,
+		    ntm.HEADER ,
+		    ntm.STATUS ,
+		    ntm.REJECT_REASON ,
+		    ntm.EXAMPLE1 ,
+		    ntm.EXAMPLE2 ,
+		    ntm.EXAMPLE3 ,
+		    ntm.EXAMPLE4 ,
+		    ntm.EXAMPLE5 ,
+		    ntm.REGI_DATE,
+		    ntm.BUTTON_NAME ,
+		    ntm.USE_HTTPS,
+		    nu.CLIENT_NAME ,
+		    nu.ORG_NAME ,
+		    nu.GROUP_NAME ,
+		    nu.ORG_DEPT ,
+		    bs.KAKAO_CHANNEL_ID ,
+		    bs.KAKAO_KEY ,
+		    bs.NAVER_CHANNEL_ID ,
+		    bs.NAVER_KEY 
+		FROM MGOV.NM_TEMPLATECODE_MNG ntm 
+		LEFT JOIN MGOV.NM_USER nu ON ntm.CLIENT_ID = nu.CLIENT_ID 
+		LEFT JOIN MGOV.BIZM_SENDERKEY bs ON nu.CLIENT_ID = bs.CLIENT_ID 
+		<where>
+			<if test="seqList != null">
+				AND ntm.SEQ IN 
+				<foreach item="item" collection="seqList" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="status != null and status != ''">
+				AND ntm.STATUS = '2'
+			</if>
+		</where>
+		ORDER BY ntm.SEQ DESC
+	</select>
+
+
+	<select id="getTemplateCodeMngList" parameterType="TemplateCodeMngDTO" resultType="TemplateCodeMngDTO">
+		SELECT *
+		FROM (
+			SELECT 
+				NTM.SEQ              ,
+				NTM.CLIENT_ID        ,
+				NTM.APP_GUBUN        ,
+				NTM.TEMPLATE_CODE    ,
+				NTM.HEADER           ,
+				NTM.STATUS           ,
+				NTM.REJECT_REASON    ,
+				NTM.EXAMPLE1         ,
+				NTM.EXAMPLE2         ,
+				NTM.EXAMPLE3         ,
+				NTM.EXAMPLE4         ,
+				NTM.EXAMPLE5         ,
+				NTM.REGI_DATE        ,
+				NTM.REPORT_DATE      ,
+				NTM.BUTTON_NAME      ,
+				NTM.IS_ACTIVATED     ,
+				ROW_NUMBER() OVER (ORDER BY NTM.REGI_DATE DESC) AS RN
+			FROM MGOV.NM_TEMPLATECODE_MNG NTM, MGOV.NM_USER NU
+			<where>
+				NTM.CLIENT_ID = NU.CLIENT_ID(+) 
+				<if test="seq > 0">
+					AND NTM.SEQ = #{seq}
+				</if>
+				<if test="clientId != null and clientId != ''">
+					AND NTM.CLIENT_ID = #{clientId}
+				</if>
+				<if test="appGubun != null and appGubun != ''">
+					AND NTM.APP_GUBUN = #{appGubun}
+				</if>
+				<if test="templateCode != null and templateCode != ''">
+					AND NTM.TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+				</if>
+				<if test="header != null and header != ''">
+					AND NTM.HEADER LIKE '%' || #{header} || '%'
+				</if>
+				<if test="status != null and status != ''">
+					AND NTM.STATUS = #{status}
+				</if>
+				<if test="orgId != null and orgId != ''">
+					AND NU.UP_ORG_ID = #{orgId}
+				</if>
+				<if test="isActivated != null and isActivated != ''">
+					AND NTM.IS_ACTIVATED = #{isActivated}
+				</if>
+			</where>
+		)
+		<![CDATA[ WHERE  RN >= #{start} AND RN <= #{end} ]]>
+	</select>
+	
+	<select id="getTemplateCodeMng" parameterType="TemplateCodeMngDTO" resultType="TemplateCodeMngDTO">
+		SELECT 
+			SEQ              ,
+			CLIENT_ID        ,
+			APP_GUBUN        ,
+			TEMPLATE_CODE    ,
+			HEADER           ,
+			STATUS           ,
+			REJECT_REASON    ,
+			EXAMPLE1         ,
+			EXAMPLE2         ,
+			EXAMPLE3         ,
+			EXAMPLE4         ,
+			EXAMPLE5         ,
+			REGI_DATE        ,
+			REPORT_DATE      ,
+			BUTTON_NAME      ,
+			USE_HTTPS        ,
+			ROW_NUMBER() OVER (ORDER BY SEQ DESC) AS RN
+		FROM MGOV.NM_TEMPLATECODE_MNG
+		<where>
+			<if test="seq > 0">
+				AND SEQ = #{seq}
+			</if>
+			<if test="clientId != null and clientId != ''">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="appGubun != null and appGubun != ''">
+				AND APP_GUBUN = #{appGubun}
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				AND TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+			</if>
+			<if test="header != null and header != ''">
+				AND HEADER LIKE '%' || #{header} || '%'
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="checkTemplateCodeExist" parameterType="TemplateCodeMngDTO" resultType="int">
+		SELECT COUNT(*)
+		FROM MGOV.NM_TEMPLATECODE_MNG
+		WHERE CLIENT_ID = #{clientId} AND TEMPLATE_CODE = #{templateCode}
+	</select>
+	
+	<select id="countTemplateCodeMng" parameterType="TemplateCodeMngDTO" resultType="int">
+		SELECT 
+			COUNT(*)
+		FROM MGOV.NM_TEMPLATECODE_MNG NTM, MGOV.NM_USER NU
+		<where>
+			NTM.CLIENT_ID = NU.CLIENT_ID(+) 
+			<if test="seq > 0">
+				AND NTM.SEQ = #{seq}
+			</if>
+			<if test="clientId != null and clientId != ''">
+				AND NTM.CLIENT_ID = #{clientId}
+			</if>
+			<if test="appGubun != null and appGubun != ''">
+				AND NTM.APP_GUBUN = #{appGubun}
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				AND NTM.TEMPLATE_CODE LIKE '%' || #{templateCode} || '%'
+			</if>
+			<if test="header != null and header != ''">
+				AND NTM.HEADER LIKE '%' || #{header} || '%'
+			</if>
+			<if test="status != null and status != ''">
+				AND NTM.STATUS = #{status}
+			</if>
+			<if test="orgId != null and orgId != ''">
+				AND NU.UP_ORG_ID = #{orgId}
+			</if>
+			<if test="isActivated != null and isActivated != ''">
+				AND NTM.IS_ACTIVATED = #{isActivated}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteTemplateCodeMng" parameterType="TemplateCodeMngDTO">
+		DELETE FROM MGOV.NM_TEMPLATECODE_MNG 
+		WHERE SEQ = #{seq}
+	</delete>
+	
+	<update id="updateTemplateCodeMng" parameterType="TemplateCodeMngDTO">
+		UPDATE MGOV.NM_TEMPLATECODE_MNG
+		<set>
+			<if test="clientId != null and clientId != ''">
+				CLIENT_ID = #{clientId},
+			</if>
+			<if test="appGubun != null and appGubun != ''">
+				APP_GUBUN = #{appGubun},
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				TEMPLATE_CODE = TRIM(#{templateCode}),
+			</if>
+			<if test="header != null and header != ''">
+				HEADER = TRIM(#{header}),
+			</if>
+			<if test="status != null and status != ''">
+				STATUS = #{status},
+			</if>
+			<if test="rejectReason != null and rejectReason != ''">
+				REJECT_REASON = #{rejectReason},
+			</if>
+			<if test="buttonName != null and buttonName != ''">
+				BUTTON_NAME = TRIM(#{buttonName}),
+			</if>
+			<if test="example1 != null and example1 != ''">
+			     EXAMPLE1 = #{ example1 },
+			</if>
+			<if test="example2 != null and example2 != ''">
+                 EXAMPLE2 = #{ example2 },
+            </if>
+            <if test="example3 != null and example3 != ''">
+                 EXAMPLE3 = #{ example3 },
+            </if>
+            <if test="example4 != null and example4 != ''">
+                 EXAMPLE4 = #{ example4 },
+            </if>
+            <if test="example5 != null and example5 != ''">
+                 EXAMPLE5 = #{ example5 },
+            </if>
+            <if test="useHttps != null and useHttps != ''">
+                 USE_HTTPS = #{ useHttps },
+            </if>
+		</set>
+		WHERE SEQ = #{seq}
+	</update>
+	
+	<update id="updateTemplateCodeStatusReject" parameterType="TemplateCodeMngDTO">
+		UPDATE MGOV.NM_TEMPLATECODE_MNG
+		SET
+			STATUS = '3',
+			REJECT_REASON = #{rejectReason}
+		WHERE SEQ = #{seq} AND STATUS = '2'
+	</update>
+	
+	<update id="updateTemplateCodeStatusComplete" parameterType="TemplateCodeMngDTO">
+		UPDATE MGOV.NM_TEMPLATECODE_MNG
+		SET
+			STATUS = '4',
+			DONE_DATE = SYSDATE
+		WHERE SEQ = #{seq} AND STATUS = '2'
+	</update>
+	
+	<update id="updateTemplateCodeStatusApply" parameterType="TemplateCodeMngDTO">
+		UPDATE MGOV.NM_TEMPLATECODE_MNG
+		SET
+			STATUS = '2',
+			REPORT_DATE = SYSDATE
+		WHERE SEQ = #{seq} AND STATUS IN ('1','3','4')
+	</update>
+	
+	<update id="updateTemplateCodeStatusEtc" parameterType="TemplateCodeMngDTO">
+        UPDATE MGOV.NM_TEMPLATECODE_MNG
+        SET
+            STATUS = '5',
+            IS_ACTIVATED = 'N',
+            REPORT_DATE = SYSDATE
+        WHERE SEQ = #{seq}
+    </update>
+	
+	<update id="updateTemplateCodeMngReRegister" parameterType="TemplateCodeMngDTO">
+		UPDATE MGOV.NM_TEMPLATECODE_MNG
+		SET 
+			REPORT_DATE = null
+		WHERE SEQ = #{seq}
+	</update>
+	
+	<insert id="insertTemplateCodeMng" parameterType="TemplateCodeMngDTO">
+		<selectKey keyProperty="seq" resultType="int" order="BEFORE">
+			SELECT MGOV.SEQ_NM2_TEMPLATE_CODE.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO MGOV.NM_TEMPLATECODE_MNG
+		(
+			SEQ
+			, CLIENT_ID
+			, APP_GUBUN
+			, TEMPLATE_CODE
+			, HEADER
+			, STATUS
+			, REJECT_REASON
+			, EXAMPLE1
+			, EXAMPLE2
+			, EXAMPLE3
+			, EXAMPLE4
+			, EXAMPLE5
+			, REGI_DATE
+			, BUTTON_NAME
+			, USE_HTTPS
+		)
+		VALUES
+		(
+			#{seq},
+			#{clientId},
+			'KAKAO',
+			REPLACE( #{templateCode}, CHR(13), '' ),
+			REPLACE( #{header}, CHR(13), '' ),
+			#{status},
+			REPLACE( #{ rejectReason, jdbcType=VARCHAR }, CHR(13), '' ), 
+			REPLACE( #{ example1,     jdbcType=VARCHAR }, CHR(13), '' ),
+			REPLACE( #{ example2,     jdbcType=VARCHAR }, CHR(13), '' ),
+			REPLACE( #{ example3,     jdbcType=VARCHAR }, CHR(13), '' ),
+			REPLACE( #{ example4,     jdbcType=VARCHAR }, CHR(13), '' ),
+			REPLACE( #{ example5,     jdbcType=VARCHAR }, CHR(13), '' ),
+			SYSDATE,
+			#{buttonName, jdbcType=VARCHAR},
+			#{useHttps,   jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="selectUserExcelDownloadList" parameterType="map" resultType="TemplateCodeMngDTO">
+		SELECT
+			*
+		FROM
+			MGOV.NM_TEMPLATECODE_MNG
+		<where>
+			<if test="clientLevel == '50' and clientId != null and clientId != ''">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="clientLevel == '60' and clientId != null and clientId != ''">
+				AND CLIENT_ID IN ( SELECT CLIENT_ID FROM MGOV.NM_USER WHERE UP_ORG_ID = #{clientId} )
+			</if>
+			<if test="status != null and status != ''">
+				AND STATUS = #{status}
+			</if>
+			<if test="templateCode != null and templateCode != ''">
+				AND TEMPLATE_CODE = #{templateCode}
+			</if>
+			<if test="header != null and header != ''">
+				AND HEADER = #{header}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getTemplateApi" parameterType="map" resultMap="apiTemplateResultMap">
+		SELECT
+			*
+		FROM
+		(
+			SELECT
+				A.*,
+				ROWNUM AS RN
+			FROM 
+			(
+				SELECT
+					t.SEQ
+					, t.CLIENT_ID
+					, t.APP_GUBUN 
+					, t.TEMPLATE_CODE 
+					, t.HEADER 
+					, t.STATUS 
+					, t.EXAMPLE1 
+					, t.EXAMPLE2 
+					, t.EXAMPLE3 
+					, t.EXAMPLE4 
+					, t.EXAMPLE5 
+					, TO_CHAR(t.REGI_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REGI_DATE
+					, TO_CHAR(t.REPORT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REPORT_DATE
+					, t.BUTTON_NAME 
+					, t.USE_HTTPS 
+					, t.REJECT_REASON
+					, s.KAKAO_CHANNEL_ID 
+					, s.KAKAO_KEY 
+					, s.NAVER_CHANNEL_ID 
+					, s.NAVER_KEY 
+				FROM
+					MGOV.NM_TEMPLATECODE_MNG t
+					, MGOV.BIZM_SENDERKEY s
+				WHERE
+					t.CLIENT_ID = s.CLIENT_ID
+					<if test='clientId != null and clientId != ""'>
+						AND t.CLIENT_ID = #{clientId}
+					</if>
+					<if test='appGubun != null and appGubun != ""'>
+						AND t.APP_GUBUN = #{appGubun}
+					</if>
+					<if test='templateCode != null and templateCode != ""'>
+						AND t.TEMPLATE_CODE = #{templateCode}
+					</if>
+					<if test='header != null and header != ""'>
+						AND t.HEADER LIKE '%' || #{header} || '%'
+					</if>
+					<if test='status != null and status != ""'>
+						AND t.STATUS = #{status}
+					</if>
+					<if test='kakaoChannelId != null and kakaoChannelId != ""'>
+						AND t.KAKAO_CHANNEL_ID = #{kakaoChannelId}
+					</if>
+					<if test='kakaoKey != null and kakaoKey != ""'>
+						AND t.KAKAO_KEY = #{kakaoKey}
+					</if>
+					<if test='naverChannelId != null and naverChannelId != ""'>
+						AND t.NAVER_CHANNEL_ID = #{naverChannelId}
+					</if>
+					<if test='naverKey != null and naverKey != ""'>
+						AND t.NAVER_KEY = #{naverKey}
+					</if>
+				 <!-- ORDER BY -->
+				 <trim prefix="ORDER BY">
+					<if test='orderSort == null or orderSort == "" or orderSort == "ASC"'>
+						<if test='orderKind == "SEQ"'>
+							t.SEQ ASC
+						</if>
+						<if test='orderKind == "CLIENT_ID"'>
+							t.CLIENT_ID ASC
+						</if>
+						<if test='orderKind == "TEMPLATE_CODE"'>
+							t.TEMPLATE_CODE ASC
+						</if>
+						<if test='orderKind == "HEADER"'>
+							t.HEADER ASC
+						</if>
+						<if test='orderKind == "KAKAO_CHANNEL_ID"'>
+							t.KAKAO_CHANNEL_ID ASC
+						</if>
+						<if test='orderKind == "NAVER_CHANNEL_ID"'>
+							t.HEADER ASC
+						</if>
+						<if test='orderKind == "REPORT_DATE"'>
+							t.REPORT_DATE ASC
+						</if>
+					</if>
+					<if test='orderSort == "DESC"'>
+						<if test='orderKind == "SEQ"'>
+							t.SEQ DESC
+						</if>
+						<if test='orderKind == "CLIENT_ID"'>
+							t.CLIENT_ID DESC
+						</if>
+						<if test='orderKind == "TEMPLATE_CODE"'>
+							t.TEMPLATE_CODE DESC
+						</if>
+						<if test='orderKind == "HEADER"'>
+							t.HEADER DESC
+						</if>
+						<if test='orderKind == "KAKAO_CHANNEL_ID"'>
+							t.KAKAO_CHANNEL_ID DESC
+						</if>
+						<if test='orderKind == "NAVER_CHANNEL_ID"'>
+							t.HEADER DESC
+						</if>
+						<if test='orderKind == "REPORT_DATE"'>
+							t.REPORT_DATE DESC 
+						</if>
+					</if>
+				 </trim>
+			 ) A
+		 )
+		 WHERE
+		 	RN BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="countTemplateApi" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+		    MGOV.NM_TEMPLATECODE_MNG t
+		    , MGOV.BIZM_SENDERKEY s
+		WHERE
+		    t.CLIENT_ID = s.CLIENT_ID
+		    <if test='clientId != null and clientId != ""'>
+		    	AND t.CLIENT_ID = #{clientId}
+		    </if>
+		    <if test='appGubun != null and appGubun != ""'>
+		    	AND t.APP_GUBUN = #{appGubun}
+		    </if>
+		    <if test='templateCode != null and templateCode != ""'>
+		    	AND t.TEMPLATE_CODE = #{templateCode}
+		    </if>
+		    <if test='header != null and header != ""'>
+		    	AND t.HEADER LIKE '%' || #{header} || '%'
+		    </if>
+		    <if test='status != null and status != ""'>
+		    	AND t.STATUS = #{status}
+		    </if>
+		    <if test='kakaoChannelId != null and kakaoChannelId != ""'>
+		    	AND t.KAKAO_CHANNEL_ID = #{kakaoChannelId}
+		    </if>
+		    <if test='kakaoKey != null and kakaoKey != ""'>
+		    	AND t.KAKAO_KEY = #{kakaoKey}
+		    </if>
+		    <if test='naverChannelId != null and naverChannelId != ""'>
+		    	AND t.NAVER_CHANNEL_ID = #{naverChannelId}
+		    </if>
+		    <if test='naverKey != null and naverKey != ""'>
+		    	AND t.NAVER_KEY = #{naverKey}
+		    </if>
+	</select>
+	
+	<update id="updateTemplateApi" parameterType="map">
+		UPDATE
+			MGOV.NM_TEMPLATECODE_MNG
+		<set>
+			<if test='status != null and status != ""'>
+				STATUS = #{status},
+			</if>
+			<if test='rejectReason != null and rejectReason != ""'>
+				REJECT_REASON = #{rejectReason}
+			</if>
+		</set>
+		WHERE
+			SEQ = #{seq}
+	</update>
+	
+	<select id="getCurrentRequestTemplateApi" resultMap="apiTemplateResultMap">
+        SELECT
+            t.SEQ
+            , t.CLIENT_ID
+            , t.APP_GUBUN 
+            , t.TEMPLATE_CODE 
+            , t.HEADER 
+            , t.STATUS 
+            , t.EXAMPLE1 
+            , t.EXAMPLE2 
+            , t.EXAMPLE3 
+            , t.EXAMPLE4 
+            , t.EXAMPLE5 
+            , TO_CHAR(t.REGI_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REGI_DATE
+            , TO_CHAR(t.REPORT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REPORT_DATE
+            , t.BUTTON_NAME 
+            , t.USE_HTTPS 
+            , t.REJECT_REASON
+            , s.KAKAO_CHANNEL_ID 
+            , s.KAKAO_KEY 
+            , s.NAVER_CHANNEL_ID 
+            , s.NAVER_KEY 
+        FROM
+            MGOV.NM_TEMPLATECODE_MNG t, MGOV.BIZM_SENDERKEY s
+        WHERE
+            t.CLIENT_ID = s.CLIENT_ID
+            AND t.STATUS = '2'
+        ORDER BY 
+	        t.REPORT_DATE DESC
+	</select>
+	
+	<update id="updateTemplateDeactivate" parameterType="TemplateCodeMngDTO">
+		UPDATE
+			MGOV.NM_TEMPLATECODE_MNG
+		SET
+			IS_ACTIVATED = 'N'
+		WHERE
+			SEQ = #{seq}
+	</update>
+
+	<update id="updateTemplateActivate" parameterType="TemplateCodeMngDTO">
+		UPDATE
+			MGOV.NM_TEMPLATECODE_MNG
+		SET
+			IS_ACTIVATED = 'Y'
+		WHERE
+			SEQ = #{seq}
+	</update>
+</mapper>

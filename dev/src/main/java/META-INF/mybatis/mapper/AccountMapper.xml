@@ -1,0 +1,2650 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="account">
+
+
+	<select id="getAccountSeq" resultType="int">
+		SELECT MGOV.MOSE_COMMON_SEQ.nextval SEQ FROM DUAL
+	</select>
+
+
+	<insert id="addAdmin" parameterType="AccountDTO">
+ 		INSERT INTO MGOV.NM_ADMIN (
+			CLIENT_ID
+		    ,ORG_NAME
+		    ,ORG_CODE
+		    ,CLIENT_LEVEL
+		    ,CLIENT_NAME
+			,CLIENT_PWD
+		    ,CLIENT_TEL
+			,CLIENT_CEL
+			,CLIENT_STATUS
+		    ,REG_DATE
+		    ,USE_WEB
+	    ) VALUES (
+			#{clientId}
+			, #{orgName}
+			, #{orgCode}
+			, #{clientLevel}
+			, #{clientName}
+			, #{clientPwd}
+			, #{clientTel}
+			, #{clientCel}
+			, #{clientStatus}
+			, SYSDATE
+			,#{useWeb,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<insert id="addUser" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_USER (
+			CHANGE_STATUS
+			,CLIENT_CEL
+			,CLIENT_ID
+			,CLIENT_LEVEL
+			,CLIENT_NAME
+			,CLIENT_PWD
+			,CLIENT_SEQ
+			,CLIENT_STATUS
+			,CLIENT_TEL
+			,GROUP_NAME
+			,IP_NO1
+			,IP_NO2
+			,IP_NO3
+			,MASTER_ID
+			,MNG_ADDR1
+			,MNG_ADDR2
+			,MNG_FAX
+			,MNG_ORG_CEO
+			,MNG_POST
+			,MO_APPROVAL
+			,MO_SMS_NOTI
+			,MONTH_SEND_LIMITE
+			,ORG_CODE
+			,ORG_DEPT
+			,ORG_NAME
+			,ORG_TITLE
+			,REG_DATE
+			,REG_ID
+			<if test="changeStatus != null and changeStatus !=''">
+			,N_STATUS
+			,SERVICE_STATUS
+			</if>
+			<if test="changeStatus == null or changeStatus ==''">
+			,N_STATUS
+			</if>
+			,SYSTEM_INFO
+			,UNIQUE_NO
+			,UP_ORG_ID
+			,USE_MMS
+			,USE_MO
+			,USE_MT
+			,USE_ORG
+			,USE_SMS
+			,USE_WEB
+			,OUTPUT_FORMAT
+			,SERVICE_DATE
+			,USE_BILLING
+			,CLIENT_MAIL
+			,SERVICE_NAME1
+			,SERVICE_TEL1
+			,SERVICE_NAME2
+			,SERVICE_TEL2
+			,MODIFY_DATE
+			,CLIENT_MEMO
+			,USE_APP
+		)VALUES(
+			#{changeStatus,jdbcType=VARCHAR}
+			,#{clientCel,jdbcType=VARCHAR}
+			,#{clientId}
+			,#{clientLevel}
+			,#{clientName,jdbcType=VARCHAR}
+			,#{clientPwd}
+			,#{clientSeq}
+			,#{clientStatus,jdbcType=VARCHAR}
+			,#{clientTel,jdbcType=VARCHAR}
+			,#{groupName,jdbcType=VARCHAR}
+			,#{ipNo1,jdbcType=VARCHAR}
+			,#{ipNo2,jdbcType=VARCHAR}
+			,#{ipNo3,jdbcType=VARCHAR}
+			,#{masterId,jdbcType=VARCHAR}
+			,#{mngAddr1,jdbcType=VARCHAR}
+			,#{mngAddr2,jdbcType=VARCHAR}
+			,#{mngFax,jdbcType=VARCHAR}
+			,#{mngOrgCeo,jdbcType=VARCHAR}
+			,#{mngPost,jdbcType=VARCHAR}
+			,#{moApproval,jdbcType=VARCHAR}
+			,#{moSmsNoti,jdbcType=VARCHAR}
+			,#{monthSendLimite,jdbcType=VARCHAR}
+			,#{orgCode,jdbcType=VARCHAR}
+			,#{orgDept,jdbcType=VARCHAR}
+			,#{orgName,jdbcType=VARCHAR}
+			,#{orgTitle,jdbcType=VARCHAR}
+			,SYSDATE
+			,#{regId,jdbcType=VARCHAR}
+			<if test="changeStatus != null and changeStatus !=''">
+			,'CN'
+			,'REPT'
+			</if>
+			<if test="changeStatus == null or changeStatus ==''">
+			,'CA'
+			</if>
+			,#{systemInfo,jdbcType=VARCHAR}
+			,#{uniqueNo,jdbcType=VARCHAR}
+			,#{upOrgId,jdbcType=VARCHAR}
+			,#{useMms,jdbcType=VARCHAR}
+			,#{useMo,jdbcType=VARCHAR}
+			,#{useMt,jdbcType=VARCHAR}
+			,#{useOrg,jdbcType=VARCHAR}
+			,#{useMt,jdbcType=VARCHAR}
+			,#{useWeb,jdbcType=VARCHAR}
+			,#{outputFormat,jdbcType=VARCHAR}
+			,#{serviceDate,jdbcType=VARCHAR}
+			,#{useBilling,jdbcType=VARCHAR}
+			,#{clientMail,jdbcType=VARCHAR}
+			,#{serviceName1,jdbcType=VARCHAR}
+			,#{serviceTel1,jdbcType=VARCHAR}
+			,#{serviceName2,jdbcType=VARCHAR}
+			,#{serviceTel2,jdbcType=VARCHAR}
+			,SYSDATE
+			,#{clientMemo,jdbcType=VARCHAR}
+			,#{useApp, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<select id="searchId"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT CLIENT_ID
+		FROM MGOV.NM_USER
+		WHERE CLIENT_NAME = #{clientName}
+			 AND CLIENT_CEL = #{clientCel}
+	</select>
+
+	<select id="searchPwd"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT CLIENT_ID, CLIENT_CEL
+			FROM MGOV.NM_USER
+			WHERE CLIENT_ID =  #{clientId}
+				AND CLIENT_NAME = #{clientName}
+				AND CLIENT_CEL = #{clientCel}
+	</select>
+	<update id="updateResetPwd" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET CLIENT_PWD			=  #{clientPwd}
+			,MODIFY_ID			=  'pwdReset'
+			,MODIFY_DATE		=  SYSDATE
+			,CLIENT_OLD_PWD 	= null
+		WHERE  CLIENT_ID	= #{clientId}
+		AND AUTH = #{auth}
+	</update>
+
+	<update id="updateResetPwd1" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET CLIENT_PWD			=  #{clientPwd}
+			,MODIFY_ID			=  'pwdReset'
+			,MODIFY_DATE		=  SYSDATE
+			,CLIENT_OLD_PWD 	= null
+		WHERE  CLIENT_ID	= #{clientId}
+
+	</update>
+
+
+
+	<update id="updateUserAuth" parameterType="AccountDTO">
+		{call
+			declare
+			begin
+				UPDATE MGOV.NM_USER
+				SET AUTH	= #{auth}
+				WHERE  CLIENT_ID	= #{clientId};
+
+				UPDATE MGOV.NM_ADMIN
+				SET AUTH	= #{auth}
+				WHERE  CLIENT_ID	= #{clientId};
+			end
+		}
+	</update>
+
+	<update id="adduserCleitCel" parameterType="AccountDTO">
+
+				UPDATE MGOV.NM_USER
+				SET 	CLIENT_CEL	= #{clientCel}
+				WHERE   CLIENT_ID	= #{clientId}
+	</update>
+	<select id="ckeckUserAuth" parameterType="AccountDTO" resultType="int">
+		SELECT COUNT(1)
+		FROM MGOV.NM_USER
+		WHERE CLIENT_ID	= #{clientId}
+			AND AUTH	= #{auth}
+	</select>
+	<select id="ckeckAdminAuth" parameterType="AccountDTO" resultType="int">
+		SELECT COUNT(1)
+		FROM MGOV.NM_ADMIN
+		WHERE CLIENT_ID	= #{clientId}
+			AND AUTH	= #{auth}
+	</select>
+
+	<select id="getTotalCount"  parameterType="AccountDTO" resultType="int">
+		SELECT
+			count(*) as totalCount
+	    FROM
+			(SELECT
+				CLIENT_ID
+				,CLIENT_SEQ
+				,UP_ORG_ID
+				,MASTER_ID
+				,ORG_NAME
+				,GROUP_NAME
+				,ORG_CODE
+				,CLIENT_LEVEL
+				,CLIENT_NAME
+				,CLIENT_TEL
+				,CLIENT_CEL
+				,CLIENT_STATUS
+				,UNIQUE_NO
+				,ORG_TITLE
+				,MNG_FAX
+				,MNG_ORG_CEO
+				,MNG_POST
+				,MNG_ADDR1
+				,MNG_ADDR2
+				,IS_OLD
+				,USE_BILLING
+				,USE_ORG
+				,USE_MMS
+				,USE_SMS
+				,USE_SMS_OLD
+				,USE_MO
+				,USE_MT
+				,USE_WEB
+				,MO_SMS_NOTI
+				,MONTH_SEND_LIMITE
+				,SERVICE_STATUS
+				,REG_ID
+				,MODIFY_ID
+				,REG_DATE
+				,MODIFY_DATE
+				,CHANGE_STATUS
+				,MO_APPROVAL
+				,SYSTEM_INFO
+				,0 AS IS_ADMIN
+				,ORG_DEPT
+				,CLIENT_LEVEL_OLD
+				,SERVICE_DATE
+			FROM MGOV.NM_USER
+			UNION ALL
+			SELECT
+				CLIENT_ID
+				,null as CLIENT_SEQ
+				,null as UP_ORG_ID
+				,null as MASTER_ID
+				,ORG_NAME
+				,null as GROUP_NAME
+				,ORG_CODE
+				,CLIENT_LEVEL
+				,CLIENT_NAME
+				,CLIENT_TEL
+				,CLIENT_CEL
+				,CLIENT_STATUS
+				,null as UNIQUE_NO
+				,null as ORG_TITLE
+				,null as MNG_FAX
+				,null as MNG_ORG_CEO
+				,null as MNG_POST
+				,null as MNG_ADDR1
+				,null as MNG_ADDR2
+				,null as IS_OLD
+				,null as USE_BILLING
+				,null as USE_ORG
+				,null as USE_MMS
+				,null as USE_SMS
+				,null as USE_SMS_OLD
+				,null as USE_MO
+				,null as USE_MT
+				,null as USE_WEB
+				,null as MO_SMS_NOTI
+				,null as MONTH_SEND_LIMITE
+				,null as SERVICE_STATUS
+				,null as REG_ID
+				,null as MODIFY_ID
+				,REG_DATE
+				,MODIFY_DATE
+				,null as CHANGE_STATUS
+				,null as MO_APPROVAL
+				,null as SYSTEM_INFO
+				,1 AS IS_ADMIN
+				,null as ORG_DEPT
+				,null as CLIENT_LEVEL_OLD
+				,null as SERVICE_DATE
+			FROM MGOV.NM_ADMIN ) A
+		WHERE 1=1
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(REG_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="orgName != null and orgName !='' ">
+				AND ORG_CODE = #{orgName}
+			</if>
+			<if test="changeStatus != null and changeStatus !='' ">
+				AND CHANGE_STATUS = #{changeStatus}
+			</if>
+			<if test="upOrgId != null and upOrgId !='' ">
+				AND UP_ORG_ID = #{upOrgId}
+			</if>
+			<if test="masterId != null and masterId !='' ">
+				AND MASTER_ID = #{masterId}
+			</if>
+			<if test="orgCode != null and orgCode !='' ">
+				AND ORG_CODE = #{orgCode}
+			</if>
+			<if test="clientCel != null and clientCel !='' ">
+				AND CLIENT_CEL = #{clientCel}
+			</if>
+			<if test="clientStatus != null and clientStatus !='' ">
+				AND CLIENT_STATUS = #{clientStatus}
+			</if>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID LIKE '%' || #{clientId} || '%'
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+			</if>
+			<if test="clientLevel != null and clientLevel !='' ">
+				AND CLIENT_LEVEL = #{clientLevel}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="isOld != null and isOld !='' ">
+				AND IS_OLD = #{isOld}
+			</if>
+
+			<if test="useOrg != null and useOrg !='' ">
+				AND USE_ORG = #{useOrg}
+			</if>
+			<if test="useMms != null and useMms !='' ">
+				AND USE_MMS = #{useMms}
+			</if>
+			<if test="useSms != null and useSms !='' ">
+				AND USE_SMS = #{useSms}
+			</if>
+			<if test="useSmsOld != null and useSmsOld !='' ">
+				AND USE_SMS_OLD = #{useSmsOld}
+			</if>
+			<if test="useMo != null and useMo !='' ">
+				AND USE_MO = #{useMo}
+			</if>
+			<if test="useMt != null and useMt !='' ">
+				AND USE_MT = #{useMt}
+			</if>
+			<if test="useWeb != null and useWeb !='' ">
+				AND USE_WEB = #{useWeb}
+			</if>
+			<if test="groupName != null and groupName !='' ">
+				AND GROUP_NAME = #{groupName}
+			</if>
+			<if test="serviceStatus != null and serviceStatus !='' ">
+				AND SERVICE_STATUS = #{serviceStatus}
+			</if>
+			<if test="searchKey != null and searchKey =='clientId' and searchVal != null and searchVal != '' ">
+                AND CLIENT_ID LIKE '%' || #{searchVal} || '%'
+            </if>
+            <if test="searchKey != null and searchKey =='clientIdWithUnderId' and searchVal != null and searchVal != '' ">
+                AND ( CLIENT_ID LIKE '%' || #{searchVal} || '%' OR MASTER_ID LIKE '%' || #{searchVal} || '%' OR UP_ORG_ID LIKE '%' || #{searchVal} || '%' )
+            </if>
+			<if test="searchKey != null and searchKey =='clientName' and searchVal != null and searchVal != '' ">
+				AND CLIENT_NAME LIKE '%' || #{searchVal} || '%'
+			</if>
+			<if test="searchKey != null and searchKey =='clientTel' and searchVal != null and searchVal != '' ">
+				AND CLIENT_TEL LIKE '%' || #{searchVal} || '%'
+			</if>
+	</select>
+
+	<select id="upAccountList"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM (
+			SELECT
+				CLIENT_ID
+				,ORG_DEPT
+				,ORG_TITLE
+				,row_number() over(ORDER BY CLIENT_SEQ DESC ) rn
+			FROM MGOV.NM_USER U
+	        WHERE CLIENT_LEVEL = '60'
+		        <if test="orgDept != null and orgDept !='' ">
+					AND ORG_DEPT LIKE '%' || #{orgDept} || '%'
+				</if>
+				<if test="orgTitle != null and orgTitle !='' ">
+					AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+				</if>
+				<if test="clientId != null and clientId !='' ">
+					AND CLIENT_ID LIKE '%' || #{clientId} || '%'
+				</if>
+				) A
+		<![CDATA[ WHERE rn>= #{start} AND rn<= #{end} ]]>
+   	</select>
+	<select id="upAccountCount"  parameterType="AccountDTO" resultType="int">
+   		SELECT
+   			COUNT(1)
+   		FROM (
+			SELECT
+				1
+			FROM MGOV.NM_USER U
+	        WHERE CLIENT_LEVEL = '60'
+		        <if test="orgDept != null and orgDept !='' ">
+					AND ORG_DEPT LIKE '%' || #{orgDept} || '%'
+				</if>
+				<if test="orgTitle != null and orgTitle !='' ">
+					AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+				</if>
+				<if test="clientId != null and clientId !='' ">
+					AND CLIENT_ID LIKE '%' || #{clientId} || '%'
+				</if>
+		)
+   	</select>
+
+	<select id="userAccountGetList"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			*
+		FROM (
+			SELECT
+				AUTH
+				,CHANGE_STATUS
+				,CLIENT_CEL
+				,CLIENT_ID
+				,CLIENT_LEVEL
+				,CLIENT_LEVEL_OLD
+				,CLIENT_NAME
+				,CLIENT_OLD_PWD
+				,CLIENT_PWD
+				,CLIENT_SEQ
+				,CLIENT_STATUS
+				,CLIENT_TEL
+				,GROUP_NAME
+				,IP_NO1
+				,IP_NO2
+				,IP_NO3
+				,IS_OLD
+				,MASTER_ID
+				,MNG_ADDR1
+				,MNG_ADDR2
+				,MNG_FAX
+				,MNG_ORG_CEO
+				,MNG_POST
+				,MODIFY_DATE
+				,MODIFY_ID
+				,MO_APPROVAL
+				,MO_SMS_NOTI
+				,MONTH_SEND_LIMITE
+				,ORG_CODE
+				,ORG_DEPT
+				,ORG_NAME
+				,ORG_TITLE
+				,REG_DATE
+				,REG_ID
+				,SERVICE_STATUS
+				,SYSTEM_INFO
+				,UNIQUE_NO
+				,UP_ORG_ID
+				,USE_BILLING
+				,USE_MMS
+				,USE_MO
+				,USE_MT
+				,USE_ORG
+				,USE_SMS
+				,USE_SMS_OLD
+				,USE_WEB
+				,USE_APP
+				,row_number() over(ORDER BY CLIENT_SEQ DESC ) ROW_NUM
+				,row_number() over(ORDER BY CLIENT_SEQ ) rn
+				,0 AS IS_ADMIN
+				,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+				,SERVICE_DATE
+			FROM MGOV.NM_USER   A
+			WHERE 1=1
+			<if test="clientLevel != null and clientLevel =='60'">
+				AND (UP_ORG_ID = #{upOrgId} OR CLIENT_ID = #{upOrgId})
+				<if test="clientId != null and clientId !=''">
+					AND CLIENT_ID like '%' || #{clientId} || '%'
+				</if>
+			</if>
+			<if test="clientLevel != null and clientLevel =='50'">
+				AND MASTER_ID = #{masterId}
+			</if>
+			<if test="clientLevel != null and clientLevel =='10'">
+				AND CLIENT_ID = #{clientId}
+			</if>
+
+			<if test=" searchKey != null and searchKey =='clientId' and searchVal != null and searchVal != '' ">
+				AND CLIENT_ID LIKE '%' || #{searchVal} || '%'
+			</if>
+
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(REG_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+			</if>
+
+
+			<if test="orgCode != null and orgCode !='' ">
+				AND ORG_CODE = #{orgCode}
+			</if>
+			<if test="clientStatus != null and clientStatus !='' ">
+				AND CLIENT_STATUS = #{clientStatus}
+			</if>
+
+			<if test="useMms != null and useMms !='' ">
+				AND USE_MMS = #{useMms}
+			</if>
+			<if test="useSms != null and useSms !='' ">
+				AND USE_SMS = #{useSms}
+			</if>
+			<if test="useMo != null and useMo !='' ">
+				AND USE_MO = #{useMo}
+			</if>
+			<if test="useWeb != null and useWeb !='' ">
+				AND USE_WEB = #{useWeb}
+			</if>
+			<if test="useApp != null and useApp !='' ">
+				AND USE_APP = #{useApp}
+			</if>
+			<if test="useMt != null and useMt !='' ">
+				AND USE_MT = #{useMt}
+			</if>
+		) A
+		<![CDATA[ WHERE rn >= #{start} AND rn <= #{end} ]]>
+		ORDER BY ROW_NUM DESC
+	</select>
+
+
+	<select id="userAccountTotalCount"  parameterType="AccountDTO" resultType="int">
+
+			SELECT
+				 count(1)
+			FROM MGOV.NM_USER   A
+			WHERE 1=1
+			<if test="clientLevel != null and clientLevel =='60'">
+				AND UP_ORG_ID = #{upOrgId}
+
+				<if test="clientId != null and clientId !=''">
+					AND CLIENT_ID like '%' || #{clientId} || '%'
+				</if>
+			</if>
+
+			<if test="clientLevel != null and clientLevel =='50'">
+				AND MASTER_ID = #{masterId}
+			</if>
+			<if test="clientLevel != null and clientLevel =='10'">
+				AND CLIENT_ID = #{clientId}
+			</if>
+
+			<if test="searchKey != null and searchKey =='clientId' and searchVal != null and searchVal != '' ">
+				AND CLIENT_ID LIKE '%' || #{searchVal} || '%'
+			</if>
+
+
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(REG_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+			</if>
+
+
+			<if test="orgCode != null and orgCode !='' ">
+				AND ORG_CODE = #{orgCode}
+			</if>
+			<if test="clientStatus != null and clientStatus !='' ">
+				AND CLIENT_STATUS = #{clientStatus}
+			</if>
+
+			<if test="useMms != null and useMms !='' ">
+				AND USE_MMS = #{useMms}
+			</if>
+			<if test="useSms != null and useSms !='' ">
+				AND USE_SMS = #{useSms}
+			</if>
+			<if test="useMo != null and useMo !='' ">
+				AND USE_MO = #{useMo}
+			</if>
+			<if test="useWeb != null and useWeb !='' ">
+				AND USE_WEB = #{useWeb}
+			</if>
+			<if test="useApp != null and useApp !='' ">
+				AND USE_APP = #{useApp}
+			</if>
+			<if test="useMt != null and useMt !='' ">
+				AND USE_MT = #{useMt}
+			</if>
+	</select>
+
+	<select id="adminSubscriptionList"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			 A.*
+			 ,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+		FROM MGOV.NM_USER   A
+		WHERE CLIENT_LEVEL = '50'
+			AND (SERVICE_STATUS = 'REPT' OR SERVICE_STATUS = 'MODI' OR CHANGE_STATUS = 'N')
+			<if test="clientId != null and clientId !=''">
+				AND CLIENT_ID like '%' || #{clientId} || '%'
+			</if>
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(MODIFY_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			  ORDER BY MODIFY_DATE DESC
+	</select>
+	<select id="adminSubscriptionTotalCount"  parameterType="AccountDTO" resultType="int">
+		SELECT
+			 count(1)
+		FROM MGOV.NM_USER   A
+		WHERE CLIENT_LEVEL = '50'
+			AND (SERVICE_STATUS = 'REPT' OR SERVICE_STATUS = 'MODI' OR CHANGE_STATUS = 'N')
+			<if test="clientId != null and clientId !=''">
+				AND CLIENT_ID like '%' || #{clientId} || '%'
+			</if>
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(MODIFY_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+	</select>
+
+	<select id="accountGetList"  parameterType="AccountDTO" resultType="AccountDTO">
+	SELECT * FROM (
+			SELECT
+				AUTH
+				,CHANGE_STATUS
+				,CLIENT_CEL
+				,CLIENT_ID
+				,CLIENT_LEVEL
+				,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+				,CLIENT_LEVEL_OLD
+				,CLIENT_NAME
+				,CLIENT_OLD_PWD
+				,CLIENT_PWD
+				,CLIENT_SEQ
+				,CLIENT_STATUS
+				,CLIENT_TEL
+				,GROUP_NAME
+				,IP_NO1
+				,IP_NO2
+				,IP_NO3
+				,IS_OLD
+				,MASTER_ID
+				,MNG_ADDR1
+				,MNG_ADDR2
+				,MNG_FAX
+				,MNG_ORG_CEO
+				,MNG_POST
+				,MODIFY_DATE
+				,MODIFY_ID
+				,MO_APPROVAL
+				,MO_SMS_NOTI
+				,MONTH_SEND_LIMITE
+				,ORG_CODE
+				,ORG_DEPT
+				,ORG_NAME
+				,ORG_TITLE
+				,REG_DATE
+				,REG_ID
+				,SERVICE_STATUS
+				,SYSTEM_INFO
+				,UNIQUE_NO
+				,UP_ORG_ID
+				,USE_BILLING
+				,USE_MMS
+				,USE_MO
+				,USE_MT
+				,USE_ORG
+				,USE_SMS
+				,USE_SMS_OLD
+				,USE_WEB
+				,USE_APP
+				,IS_ADMIN
+				<if test="orderBy != null and orderBy != ''">
+				    <choose>
+				        <when test="orderBy == 'REG_DATE'">
+				            <if test="orderBySc == 'ASC'">
+					            ,row_number() over(ORDER BY REG_DATE DESC) ROW_NUM
+	                            ,row_number() over(ORDER BY REG_DATE) rn
+                            </if>
+                            <if test="orderBySc == 'DESC'">
+                                ,row_number() over(ORDER BY REG_DATE) ROW_NUM
+                                ,row_number() over(ORDER BY REG_DATE DESC) rn
+                            </if>
+				        </when>
+				        <when test="orderBy == 'CLIENT_ID'">
+                            <if test="orderBySc == 'ASC'">
+                                ,row_number() over(ORDER BY CLIENT_ID DESC) ROW_NUM
+                                ,row_number() over(ORDER BY CLIENT_ID) rn
+                            </if>
+                            <if test="orderBySc == 'DESC'">
+                                ,row_number() over(ORDER BY CLIENT_ID) ROW_NUM
+                                ,row_number() over(ORDER BY CLIENT_ID DESC) rn
+                            </if>
+                        </when>
+                        <when test="orderBy == 'MASTER_ID'">
+                            <if test="orderBySc == 'ASC'">
+                                ,row_number() over(ORDER BY MASTER_ID DESC) ROW_NUM
+                                ,row_number() over(ORDER BY MASTER_ID) rn
+                            </if>
+                            <if test="orderBySc == 'DESC'">
+                                ,row_number() over(ORDER BY MASTER_ID) ROW_NUM
+                                ,row_number() over(ORDER BY MASTER_ID DESC) rn
+                            </if>
+                        </when>
+                        <otherwise>
+							,row_number() over(ORDER BY MODIFY_DATE) ROW_NUM
+			                ,row_number() over(ORDER BY MODIFY_DATE DESC) rn
+                        </otherwise>
+                    </choose>
+				</if>
+				<if test="orderBy == null or orderBy == ''">
+				,row_number() over(ORDER BY MODIFY_DATE) ROW_NUM
+				,row_number() over(ORDER BY MODIFY_DATE DESC) rn
+				</if>
+				,SERVICE_DATE
+		    FROM
+				(SELECT
+					AUTH
+					,CHANGE_STATUS
+					,CLIENT_CEL
+					,CLIENT_ID
+					,CLIENT_LEVEL
+					,CLIENT_LEVEL_OLD
+					,CASE WHEN NM.CLIENT_LEVEL IN('10','20','30','40') THEN (SELECT CLIENT_NAME FROM MGOV.NM_USER TM WHERE TM.CLIENT_ID=NM.MASTER_ID) ELSE NM.CLIENT_NAME END  AS CLIENT_NAME
+					,CLIENT_OLD_PWD
+					,CLIENT_PWD
+					,CLIENT_SEQ
+					,CLIENT_STATUS
+					,CLIENT_TEL
+					,GROUP_NAME
+					,IP_NO1
+					,IP_NO2
+					,IP_NO3
+					,IS_OLD
+					,MASTER_ID
+					,MNG_ADDR1
+					,MNG_ADDR2
+					,MNG_FAX
+					,MNG_ORG_CEO
+					,MNG_POST
+					,MODIFY_DATE
+					,MODIFY_ID
+					,MO_APPROVAL
+					,MO_SMS_NOTI
+					,MONTH_SEND_LIMITE
+					,ORG_CODE
+					,ORG_DEPT
+					,CASE WHEN NM.CLIENT_LEVEL IN('10','20','30','40') THEN (SELECT ORG_NAME FROM MGOV.NM_USER TM WHERE TM.CLIENT_ID=NM.MASTER_ID) ELSE NM.ORG_NAME END  AS ORG_NAME
+					,CASE WHEN NM.CLIENT_LEVEL IN('10','20','30','40') THEN (SELECT ORG_TITLE FROM MGOV.NM_USER TM WHERE TM.CLIENT_ID=NM.MASTER_ID) ELSE NM.ORG_TITLE END  AS ORG_TITLE
+					,REG_DATE
+					,REG_ID
+					,SERVICE_STATUS
+					,SYSTEM_INFO
+					,UNIQUE_NO
+					,UP_ORG_ID
+					,USE_BILLING
+					,USE_MMS
+					,USE_MO
+					,USE_MT
+					,USE_ORG
+					,USE_SMS
+					,USE_SMS_OLD
+					,USE_WEB
+					,USE_APP
+					,0 AS IS_ADMIN
+					,SERVICE_DATE
+				FROM MGOV.NM_USER NM
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,null			AS USE_APP
+					,1 AS IS_ADMIN
+					,null 			AS SERVICE_DATE
+				FROM MGOV.NM_ADMIN ) A
+			WHERE 1=1
+			<if test="orgTitle != null and orgTitle !='' ">
+				AND ORG_TITLE LIKE '%' || #{orgTitle} || '%'
+			</if>
+			<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+				AND TO_CHAR(REG_DATE,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="orgName != null and orgName !='' ">
+				AND ORG_CODE = #{orgName}
+			</if>
+			<if test="changeStatus != null and changeStatus !='' ">
+				AND CHANGE_STATUS = #{changeStatus}
+			</if>
+			<if test="upOrgId != null and upOrgId !='' ">
+				AND UP_ORG_ID = #{upOrgId}
+			</if>
+			<if test="masterId != null and masterId !='' ">
+				AND MASTER_ID = #{masterId}
+			</if>
+			<if test="orgCode != null and orgCode !='' ">
+				AND ORG_CODE = #{orgCode}
+			</if>
+			<if test="clientCel != null and clientCel !='' ">
+				AND CLIENT_CEL = #{clientCel}
+			</if>
+			<if test="clientStatus != null and clientStatus !='' ">
+				AND CLIENT_STATUS = #{clientStatus}
+			</if>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID LIKE '%' || #{clientId} || '%'
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+			</if>
+			<if test="clientLevel != null and clientLevel !='' ">
+				AND CLIENT_LEVEL = #{clientLevel}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="isOld != null and isOld !='' ">
+				AND IS_OLD = #{isOld}
+			</if>
+			<if test="useBilling != null and useBilling !='' ">
+				AND USE_BILLING = #{useBilling}
+			</if>
+			<if test="useOrg != null and useOrg !='' ">
+				AND USE_ORG = #{useOrg}
+			</if>
+			<if test="useMms != null and useMms !='' ">
+				AND USE_MMS = #{useMms}
+			</if>
+			<if test="useSms != null and useSms !='' ">
+				AND USE_SMS = #{useSms}
+			</if>
+			<if test="useSmsOld != null and useSmsOld !='' ">
+				AND USE_SMS_OLD = #{useSmsOld}
+			</if>
+			<if test="useMo != null and useMo !='' ">
+				AND USE_MO = #{useMo}
+			</if>
+			<if test="useMt != null and useMt !='' ">
+				AND USE_MT = #{useMt}
+			</if>
+			<if test="useWeb != null and useWeb !='' ">
+				AND USE_WEB = #{useWeb}
+			</if>
+			<if test="groupName != null and groupName !='' ">
+				AND GROUP_NAME = #{groupName}
+			</if>
+			<if test="serviceStatus != null and serviceStatus !='' ">
+				AND SERVICE_STATUS = #{serviceStatus}
+			</if>
+			<if test="searchKey != null and searchKey =='clientId' and searchVal != null and searchVal != '' ">
+				AND CLIENT_ID LIKE '%' || #{searchVal} || '%'
+			</if>
+			<if test="searchKey != null and searchKey =='clientIdWithUnderId' and searchVal != null and searchVal != '' ">
+                AND ( CLIENT_ID LIKE '%' || #{searchVal} || '%' OR MASTER_ID LIKE '%' || #{searchVal} || '%' OR UP_ORG_ID LIKE '%' || #{searchVal} || '%' )
+            </if>
+			<if test="searchKey != null and searchKey =='clientName' and searchVal != null and searchVal != '' ">
+				AND CLIENT_NAME LIKE '%' || #{searchVal} || '%'
+			</if>
+			<if test="searchKey != null and searchKey =='clientTel' and searchVal != null and searchVal != '' ">
+				AND CLIENT_TEL LIKE '%' || #{searchVal} || '%'
+			</if>
+		)
+		<![CDATA[ WHERE rn>= #{start} AND rn<= #{end} ]]>
+			ORDER BY ROW_NUM DESC
+	</select>
+
+	<select id="accountGetData"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			AUTH
+			,CHANGE_STATUS
+			,CLIENT_CEL
+			,CLIENT_ID
+			,CLIENT_LEVEL
+			,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+			,CLIENT_LEVEL_OLD
+			,CLIENT_NAME
+			,CLIENT_OLD_PWD
+			,CLIENT_PWD
+			,CLIENT_SEQ
+			,CLIENT_STATUS
+			,CLIENT_TEL
+			,GROUP_NAME
+			,IP_NO1
+			,IP_NO2
+			,IP_NO3
+			,IS_OLD
+			,MASTER_ID
+			,MNG_ADDR1
+			,MNG_ADDR2
+			,MNG_FAX
+			,MNG_ORG_CEO
+			,MNG_POST
+			,MODIFY_DATE
+			,MODIFY_ID
+			,MO_APPROVAL
+			,MO_SMS_NOTI
+			,MONTH_SEND_LIMITE
+			,ORG_CODE
+			,ORG_DEPT
+			,ORG_NAME
+			,ORG_TITLE
+			,REG_DATE
+			,REG_ID
+			,SERVICE_STATUS
+			,N_STATUS
+			,SYSTEM_INFO
+			,UNIQUE_NO
+			,UP_ORG_ID
+			,USE_BILLING
+			,USE_MMS
+			,USE_MO
+			,USE_MT
+			,USE_ORG
+			,USE_SMS
+			,USE_SMS_OLD
+			,USE_WEB
+			,IS_ADMIN
+			,OUTPUT_FORMAT
+			,(SELECT CLIENT_NAME FROM MGOV.NM_USER WHERE CLIENT_ID = A.UP_ORG_ID) as UP_ORG_NAME
+			,SERVICE_DATE
+			,PAYER_NO
+			,SERVICE_NAME1
+			,SERVICE_TEL1
+			,SERVICE_NAME2
+			,SERVICE_TEL2
+			,CLIENT_MAIL
+			,CLIENT_MEMO
+			,USE_APP
+	    FROM
+			(SELECT
+					C.AUTH
+					,C.CHANGE_STATUS
+					,C.CLIENT_CEL
+					,C.CLIENT_ID
+					,C.CLIENT_LEVEL
+					,C.CLIENT_LEVEL_OLD
+					,C.CLIENT_NAME
+					,C.CLIENT_OLD_PWD
+					,C.CLIENT_PWD
+					,C.CLIENT_SEQ
+					,C.CLIENT_STATUS
+					,C.CLIENT_TEL
+					,C.GROUP_NAME
+					,C.IP_NO1
+					,C.IP_NO2
+					,C.IP_NO3
+					,C.IS_OLD
+					,C.MASTER_ID
+					,C.MNG_ADDR1
+					,C.MNG_ADDR2
+					,C.MNG_FAX
+					,C.MNG_ORG_CEO
+					,C.MNG_POST
+					,C.MODIFY_DATE
+					,C.MODIFY_ID
+					,C.MO_APPROVAL
+					,C.MO_SMS_NOTI
+					,C.MONTH_SEND_LIMITE
+					,C.ORG_CODE
+					,C.ORG_DEPT
+					,C.ORG_NAME
+					,C.ORG_TITLE
+					,C.REG_DATE
+					,C.REG_ID
+					,C.SERVICE_STATUS
+					,C.N_STATUS
+					,C.SYSTEM_INFO
+					,C.UNIQUE_NO
+					,C.UP_ORG_ID
+					,C.USE_BILLING
+					,C.USE_MMS
+					,C.USE_MO
+					,C.USE_MT
+					,C.USE_ORG
+					,C.USE_SMS
+					,C.USE_SMS_OLD
+					,C.USE_WEB
+					,C.OUTPUT_FORMAT
+					,0 AS IS_ADMIN
+					,C.SERVICE_DATE
+					,B.PAYER_NO
+					,C.SERVICE_NAME1
+					,C.SERVICE_TEL1
+					,C.SERVICE_NAME2
+					,C.SERVICE_TEL2
+					,C.CLIENT_MAIL
+					,C.CLIENT_MEMO
+					,C.USE_APP
+				FROM MGOV.NM_USER C, MGOV.NM_BILLING B
+				WHERE C.CLIENT_ID=B.CLIENT_ID(+)
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null			AS N_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,null 			as OUTPUT_FORMAT
+					,1 AS IS_ADMIN
+					,null as SERVICE_DATE
+					,null as PAYER_NO
+					,null as SERVICE_NAME1
+					,null as SERVICE_TEL1
+					,null as SERVICE_NAME2
+					,null as SERVICE_TEL2
+					,null as CLIENT_MAIL
+					,null as CLIENT_MEMO
+					,null as USE_APP
+				FROM MGOV.NM_ADMIN ) A
+		<where>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="clientCel != null and clientCel !='' ">
+				AND CLIENT_CEL = #{clientCel}
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME = #{clientName}
+			</if>
+			<if test="payerNo != null and payerNo !='' ">
+				AND PAYER_NO = #{payerNo}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="accountGetDataCnt"  parameterType="AccountDTO" resultType="int">
+		SELECT
+			count(*)
+	    FROM
+			(SELECT
+					C.AUTH
+					,C.CHANGE_STATUS
+					,C.CLIENT_CEL
+					,C.CLIENT_ID
+					,C.CLIENT_LEVEL
+					,C.CLIENT_LEVEL_OLD
+					,C.CLIENT_NAME
+					,C.CLIENT_OLD_PWD
+					,C.CLIENT_PWD
+					,C.CLIENT_SEQ
+					,C.CLIENT_STATUS
+					,C.CLIENT_TEL
+					,C.GROUP_NAME
+					,C.IP_NO1
+					,C.IP_NO2
+					,C.IP_NO3
+					,C.IS_OLD
+					,C.MASTER_ID
+					,C.MNG_ADDR1
+					,C.MNG_ADDR2
+					,C.MNG_FAX
+					,C.MNG_ORG_CEO
+					,C.MNG_POST
+					,C.MODIFY_DATE
+					,C.MODIFY_ID
+					,C.MO_APPROVAL
+					,C.MO_SMS_NOTI
+					,C.MONTH_SEND_LIMITE
+					,C.ORG_CODE
+					,C.ORG_DEPT
+					,C.ORG_NAME
+					,C.ORG_TITLE
+					,C.REG_DATE
+					,C.REG_ID
+					,C.SERVICE_STATUS
+					,C.SYSTEM_INFO
+					,C.UNIQUE_NO
+					,C.UP_ORG_ID
+					,C.USE_BILLING
+					,C.USE_MMS
+					,C.USE_MO
+					,C.USE_MT
+					,C.USE_ORG
+					,C.USE_SMS
+					,C.USE_SMS_OLD
+					,C.USE_WEB
+					,C.OUTPUT_FORMAT
+					,0 AS IS_ADMIN
+					,C.SERVICE_DATE
+					,B.PAYER_NO
+					,C.SERVICE_NAME1
+					,C.SERVICE_TEL1
+					,C.SERVICE_NAME2
+					,C.SERVICE_TEL2
+					,C.CLIENT_MAIL
+
+				FROM MGOV.NM_USER C, MGOV.NM_BILLING B
+				WHERE C.CLIENT_ID=B.CLIENT_ID
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,null 			as OUTPUT_FORMAT
+					,1 AS IS_ADMIN
+					,null as SERVICE_DATE
+					,null as PAYER_NO
+					,null as SERVICE_NAME1
+					,null as SERVICE_TEL1
+					,null as SERVICE_NAME2
+					,null as SERVICE_TEL2
+					,null as CLIENT_MAIL
+				FROM MGOV.NM_ADMIN ) A
+		<where>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="clientCel != null and clientCel !='' ">
+				AND CLIENT_CEL = #{clientCel}
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME = #{clientName}
+			</if>
+			<if test="payerNo != null and payerNo !='' ">
+				AND PAYER_NO = #{payerNo}
+			</if>
+
+		</where>
+	</select>
+	
+	
+	
+
+	<select id="accountGetDataChk"  parameterType="AccountDTO" resultType="AccountDTO">
+	SELECT * FROM MGOV.NM_USER
+		<where>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID = #{clientId}
+			</if>
+
+
+		</where>
+	</select>
+
+	<select id="accountGetDataOther"  parameterType="AccountDTO" resultType="AccountDTO">
+		select * from MGOV.NM_USER
+		where client_id = #{clientId}
+	</select>
+
+	<select id="accountGetMoOther"  parameterType="AccountDTO" resultType="AccountDTO">
+		select * from MGOV.NM_USER
+		where CLIENT_ID = #{masterId}
+	</select>
+
+	<select id="accountGetClientmo"  parameterType="AccountMoDTO" resultType="AccountMoDTO">
+		select * from MOGW.CLIENTINFO where client_id=#{clientId}
+	</select>
+
+
+	<select id="accountGetCleintinfo"  parameterType="AccountMoDTO" resultType="AccountMoDTO">
+		select
+			nvl(lengthb(publickey),0) as bytes
+			, client_id as clientId
+			, client_name as clientName
+			, use_private_ip as usePrivateIp
+			, client_code as clientCode
+		from MOGW.CLIENTINFO
+		WHERE client_id=#{clientId}
+	</select>
+
+	<select id="accountGetMoinfo"  parameterType="AccountMoDTO" resultType="AccountMoDTO">
+		select * from MOGW.MOINFO
+		WHERE client_code=#{clientCode}
+	</select>
+
+	<!-- 20160901추가(mo계정수정시 NM_user 상태값 변화) -->
+
+	<update id="moNmUserUpdate"   parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+			SET  CLIENT_STATUS = #{clientStatus}
+				, CLIENT_PWD	=#{clientPwd}
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+
+	<!-- 2016923 추가(system계정 수정 NM_user 테이블 update -->
+	<update id="systemUserUpdate"   parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+			SET
+				  CLIENT_NAME		= #{clientName}
+				, SYSTEM_INFO		= #{systemInfo}
+				, MONTH_SEND_LIMITE	= #{monthSendLimite}
+				, CLIENT_STATUS		= #{clientStatus}
+				, CLIENT_PWD		= #{clientPwd}
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+
+	<!-- 2016926 추가(Web계정 수정 NM_user 테이블 update -->
+	<update id="WebUserUpdate"   parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+			SET
+				  CLIENT_NAME		= #{clientName}
+				, CLIENT_CEL		= #{clientCel}
+				, CLIENT_TEL		= #{clientTel}
+				, CLIENT_STATUS		= #{clientStatus}
+				, CLIENT_PWD		= #{clientPwd}
+		WHERE CLIENT_ID = #{clientId}
+	</update>
+
+	<select id="accountGetCount"  parameterType="AccountDTO" resultType="map">
+		SELECT
+			count(1) as cnt
+	    FROM
+			(SELECT
+					AUTH
+					,CHANGE_STATUS
+					,CLIENT_CEL
+					,CLIENT_ID
+					,CLIENT_LEVEL
+					,CLIENT_LEVEL_OLD
+					,CLIENT_NAME
+					,CLIENT_OLD_PWD
+					,CLIENT_PWD
+					,CLIENT_SEQ
+					,CLIENT_STATUS
+					,CLIENT_TEL
+					,GROUP_NAME
+					,IP_NO1
+					,IP_NO2
+					,IP_NO3
+					,IS_OLD
+					,MASTER_ID
+					,MNG_ADDR1
+					,MNG_ADDR2
+					,MNG_FAX
+					,MNG_ORG_CEO
+					,MNG_POST
+					,MODIFY_DATE
+					,MODIFY_ID
+					,MO_APPROVAL
+					,MO_SMS_NOTI
+					,MONTH_SEND_LIMITE
+					,ORG_CODE
+					,ORG_DEPT
+					,ORG_NAME
+					,ORG_TITLE
+					,REG_DATE
+					,REG_ID
+					,SERVICE_STATUS
+					,SYSTEM_INFO
+					,UNIQUE_NO
+					,UP_ORG_ID
+					,USE_BILLING
+					,USE_MMS
+					,USE_MO
+					,USE_MT
+					,USE_ORG
+					,USE_SMS
+					,USE_SMS_OLD
+					,USE_WEB
+					,0 AS IS_ADMIN
+					,SERVICE_DATE
+				FROM MGOV.NM_USER
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,1				 AS IS_ADMIN
+					, null 			as SERVICE_DATE
+				FROM MGOV.NM_ADMIN ) A
+		WHERE CLIENT_ID = #{clientId}
+			AND IS_ADMIN = #{isAdmin}
+	</select>
+
+	<update id="updateAdmin" parameterType="AccountDTO">
+		UPDATE MGOV.NM_ADMIN
+		SET ORG_NAME		= #{orgName,jdbcType=VARCHAR}
+			,ORG_CODE		= #{orgCode,jdbcType=VARCHAR}
+			,CLIENT_NAME  	= #{clientName,jdbcType=VARCHAR}
+			,CLIENT_TEL 	= #{clientTel,jdbcType=VARCHAR}
+			,CLIENT_CEL 	= #{clientCel,jdbcType=VARCHAR}
+			,CLIENT_STATUS 	= #{clientStatus,jdbcType=VARCHAR}
+			,USE_WEB 		= #{useWeb,jdbcType=VARCHAR}
+			,CLIENT_PWD		= #{clientPwd, jdbcType=VARCHAR}
+		WHERE  CLIENT_ID	= #{clientId}
+	</update>
+	<update id="updateUser" parameterType="AccountDTO" >
+		UPDATE MGOV.NM_USER
+			SET CHANGE_STATUS	= #{changeStatus,jdbcType=VARCHAR}
+			,CLIENT_CEL       	= #{clientCel,jdbcType=VARCHAR}
+			,CLIENT_NAME    	= #{clientName,jdbcType=VARCHAR}
+		<if test=" clientStatus != null and clientStatus != '0' ">
+			,CLIENT_STATUS   	= #{clientStatus,jdbcType=VARCHAR}
+		</if>
+			,CLIENT_TEL       	= #{clientTel,jdbcType=VARCHAR}
+			,GROUP_NAME       	= #{groupName,jdbcType=VARCHAR}
+			,IP_NO1           	= #{ipNo1,jdbcType=VARCHAR}
+			,IP_NO2           	= #{ipNo2,jdbcType=VARCHAR}
+			,IP_NO3    			= #{ipNo3,jdbcType=VARCHAR}
+			,MASTER_ID     		= #{masterId,jdbcType=VARCHAR}
+			,MNG_ADDR1        	= #{mngAddr1,jdbcType=VARCHAR}
+			,MNG_ADDR2        	= #{mngAddr2,jdbcType=VARCHAR}
+			,MNG_FAX          	= #{mngFax,jdbcType=VARCHAR}
+			,MNG_ORG_CEO      	= #{mngOrgCeo,jdbcType=VARCHAR}
+			,MNG_POST         	= #{mngPost,jdbcType=VARCHAR}
+			,MODIFY_DATE  		= SYSDATE
+			,MODIFY_ID        	= #{modifyId,jdbcType=VARCHAR}
+			,MO_APPROVAL		= #{moApproval,jdbcType=VARCHAR}
+			,MO_SMS_NOTI      	= #{moSmsNoti,jdbcType=VARCHAR}
+			,MONTH_SEND_LIMITE	= #{monthSendLimite,jdbcType=VARCHAR}
+			,ORG_CODE 			= #{orgCode,jdbcType=VARCHAR}
+			,ORG_DEPT         	= #{orgDept,jdbcType=VARCHAR}
+			,ORG_NAME         	= #{orgName,jdbcType=VARCHAR}
+			,ORG_TITLE        	= #{orgTitle,jdbcType=VARCHAR}
+			<if test=" changeStatus != null and nStatus == 'CF'">
+			,N_STATUS = 'CR'
+			,SERVICE_STATUS   	= 'REPT'
+			</if>
+			<if test=" changeStatus != null and nStatus == 'CA' ">
+			,N_STATUS = 'CN'
+			,SERVICE_STATUS   	= 'REPT'
+			</if>
+			<if test=" serviceStatus != null and serviceStatus != '' and serviceStatus != 'REPT' and nStatus != 'CF'">
+			,SERVICE_STATUS   	= 'MODI'
+			</if>
+			,SYSTEM_INFO 		= #{systemInfo,jdbcType=VARCHAR}
+			,UNIQUE_NO        	= #{uniqueNo,jdbcType=VARCHAR}
+			,UP_ORG_ID        	= #{upOrgId,jdbcType=VARCHAR}
+			,USE_MMS  			= #{useMms,jdbcType=VARCHAR}
+			,USE_MO   			= #{useMo,jdbcType=VARCHAR}
+			,USE_MT  			= #{useMt,jdbcType=VARCHAR}
+			,USE_ORG 			= #{useOrg,jdbcType=VARCHAR}
+			,USE_SMS 			= #{useSms,jdbcType=VARCHAR}
+			,USE_WEB			= #{useWeb,jdbcType=VARCHAR}
+			,OUTPUT_FORMAT		= #{outputFormat,jdbcType=VARCHAR}
+			,SERVICE_DATE		= #{serviceDate,jdbcType=VARCHAR}
+			,USE_BILLING		= #{useBilling,jdbcType=VARCHAR}
+			,SERVICE_NAME1		= #{serviceName1,jdbcType=VARCHAR}
+			,SERVICE_TEL1		= #{serviceTel1,jdbcType=VARCHAR}
+			,SERVICE_NAME2		= #{serviceName2,jdbcType=VARCHAR}
+			,SERVICE_TEL2		= #{serviceTel2,jdbcType=VARCHAR}
+			,CLIENT_MAIL		= #{clientMail,jdbcType=VARCHAR}
+			,CLIENT_MEMO		= #{clientMemo,jdbcType=VARCHAR}
+			,USE_APP            = #{useApp,jdbcType=VARCHAR}
+			<if test=" clientPwd != null and clientPwd != '' ">
+			,CLIENT_PWD			= #{clientPwd}
+			</if>
+			<if test=' changeClientCel != null and changeClientCel == "Y" '>
+			,CLIENT_AGREE		= 'N'
+			</if>
+		WHERE  CLIENT_ID	= #{clientId}
+	</update>
+	<update id="updateUserCheck" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET MODIFY_ID		= #{modifyId,jdbcType=VARCHAR}
+			,MODIFY_DATE	= SYSDATE
+			,CHANGE_STATUS	= 'Y'
+			,N_STATUS		= 'CT'
+			<if test='changeStatus != null and changeStatus == "Y"'>
+			,SERVICE_STATUS = 'LGMO' 
+			</if>
+			<if test='changeStatus != null and changeStatus == "N"'>
+			,SERVICE_STATUS = 'LGRE' 
+			</if>
+		WHERE  CLIENT_ID	= #{clientId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateUserUse" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET MODIFY_ID		= #{modifyId,jdbcType=VARCHAR}
+			,MODIFY_DATE	= SYSDATE
+			,CLIENT_STATUS	= 1
+		WHERE  CLIENT_ID	= #{clientId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateUserStop" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET MODIFY_ID		= #{modifyId,jdbcType=VARCHAR}
+			,MODIFY_DATE	= SYSDATE
+			,CLIENT_STATUS	= 2
+		WHERE  CLIENT_ID	= #{clientId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateUserDisable" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET MODIFY_ID		= #{modifyId,jdbcType=VARCHAR}
+			,MODIFY_DATE	= SYSDATE
+			,CLIENT_STATUS	= 3
+		WHERE  CLIENT_ID	= #{clientId,jdbcType=VARCHAR}
+	</update>
+	<select id="deleteYN"  parameterType="AccountDTO" resultType="int">
+		SELECT count(1)
+		FROM MGOV.NM_USER
+		WHERE CLIENT_ID = #{clientId}
+			 AND CLIENT_STATUS = '0'
+	</select>
+	<delete id="deleteAccount" parameterType="AccountDTO">
+		DELETE FROM
+		<if test=" isAdmin == 1 ">MGOV.NM_ADMIN</if>
+		<if test=" isAdmin == null or isAdmin == 0 ">MGOV.NM_USER</if>
+		WHERE CLIENT_ID	= #{clientId}
+		<if test=" isAdmin == null or isAdmin == 0 ">
+			AND CLIENT_STATUS = '0'
+		</if>
+	</delete>
+
+	<select id="terminationGetList"  parameterType="AccountDTO" resultType="AccountDTO">
+	SELECT * FROM (
+		SELECT
+			A.CLIENT_ID
+			,A.CLIENT_NAME
+			,A.ORG_NAME
+            ,A.CLIENT_STATUS
+            ,A.SERVICE_STATUS
+            ,TO_CHAR(UL_ACTION_TIME,'YYYY-MM-DD HH24:MI:SS') as UL_ACTION_TIME
+            ,UL_REASON
+            ,UL_STATUS
+			,row_number() over(ORDER BY UL_ACTION_TIME ASC) ROW_NUM
+			,row_number() over(ORDER BY UL_ACTION_TIME desc) rn
+			,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+		FROM MGOV.NM_USER A
+		JOIN MGOV.NM_use_log B ON A.CLIENT_ID=B.TARGET_ID
+			 	<where>
+				<if test="clientLevel != null and clientLevel =='60'">
+					AND UP_ORG_ID = #{upOrgId}
+				</if>
+				<if test="clientId != null and clientId !=''">
+					AND A.CLIENT_ID like '%' || #{clientId} || '%'
+				</if>
+				<if test="clientLevel != null and clientLevel =='50'">
+					AND MASTER_ID = #{masterId}
+				</if>
+				<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+					AND TO_CHAR(UL_ACTION_TIME,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+				</if>
+				<if test="orgName != null and orgName !='' ">
+					AND ORG_CODE = #{orgName}
+				</if>
+				<if test="masterId != null and masterId !='' ">
+					AND MASTER_ID = #{masterId}
+				</if>
+				<if test="orgName != null and orgName !='' ">
+					AND ORG_NAME = #{orgName}
+				</if>
+				<if test="clientName != null and clientName !='' ">
+					AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+				</if>
+		  </where>
+		)
+		<![CDATA[ WHERE rn >= #{start} AND rn <= #{end} ]]>
+		ORDER BY ROW_NUM DESC
+	</select>
+	<select id="getTerminationTotalCount"  parameterType="AccountDTO" resultType="int">
+		SELECT
+			count(*) as totalCount
+	    FROM (
+	    SELECT
+			A.CLIENT_ID
+			,A.CLIENT_NAME
+			,A.ORG_NAME
+            ,A.CLIENT_STATUS
+            ,TO_CHAR(UL_ACTION_TIME,'YYYY-MM-DD HH24:MI:SS') as UL_ACTION_TIME
+            ,UL_REASON
+            ,UL_STATUS
+			,row_number() over(ORDER BY CLIENT_SEQ DESC) ROW_NUM
+			,row_number() over(ORDER BY CLIENT_SEQ) rn
+			,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+		FROM MGOV.NM_USER A
+		JOIN MGOV.NM_use_log B ON A.CLIENT_ID=B.TARGET_ID
+		<where>
+			<if test="clientLevel != null and clientLevel =='60'">
+					AND UP_ORG_ID = #{upOrgId}
+				</if>
+				<if test="clientId != null and clientId !=''">
+					AND A.CLIENT_ID like '%' || #{clientId} || '%'
+				</if>
+				<if test="clientLevel != null and clientLevel =='50'">
+					AND MASTER_ID = #{masterId}
+				</if>
+				<if test="startDate != null and startDate !='' and endDate != null and endDate !=''  ">
+					AND TO_CHAR(UL_ACTION_TIME,'YYYYMMDD') BETWEEN #{startDate} AND #{endDate}
+				</if>
+				<if test="orgName != null and orgName !='' ">
+					AND ORG_CODE = #{orgName}
+				</if>
+				<if test="masterId != null and masterId !='' ">
+					AND MASTER_ID = #{masterId}
+				</if>
+				<if test="orgName != null and orgName !='' ">
+					AND ORG_NAME = #{orgName}
+				</if>
+				<if test="clientName != null and clientName !='' ">
+					AND CLIENT_NAME LIKE '%' || #{clientName} || '%'
+				</if>
+		 </where>
+		 )
+	</select>
+
+
+	<select id="firstaccountGetData"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			AUTH
+			,CHANGE_STATUS
+			,CLIENT_CEL
+			,CLIENT_ID
+			,CLIENT_LEVEL
+			,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+			,CLIENT_LEVEL_OLD
+			,CLIENT_NAME
+			,CLIENT_OLD_PWD
+			,CLIENT_PWD
+			,CLIENT_SEQ
+			,CLIENT_STATUS
+			,CLIENT_TEL
+			,GROUP_NAME
+			,IP_NO1
+			,IP_NO2
+			,IP_NO3
+			,IS_OLD
+			,MASTER_ID
+			,MNG_ADDR1
+			,MNG_ADDR2
+			,MNG_FAX
+			,MNG_ORG_CEO
+			,MNG_POST
+			,MODIFY_DATE
+			,MODIFY_ID
+			,MO_APPROVAL
+			,MO_SMS_NOTI
+			,MONTH_SEND_LIMITE
+			,ORG_CODE
+			,ORG_DEPT
+			,ORG_NAME
+			,ORG_TITLE
+			,REG_DATE
+			,REG_ID
+			,SERVICE_STATUS
+			,SYSTEM_INFO
+			,UNIQUE_NO
+			,UP_ORG_ID
+			,USE_BILLING
+			,USE_MMS
+			,USE_MO
+			,USE_MT
+			,USE_ORG
+			,USE_SMS
+			,USE_SMS_OLD
+			,USE_WEB
+			,IS_ADMIN
+			,OUTPUT_FORMAT
+			,(SELECT CLIENT_NAME FROM MGOV.NM_USER WHERE CLIENT_ID = A.UP_ORG_ID) as UP_ORG_NAME
+			,SERVICE_DATE
+			,PAYER_NO
+	    FROM
+			(SELECT
+					C.AUTH
+					,C.CHANGE_STATUS
+					,C.CLIENT_CEL
+					,C.CLIENT_ID
+					,C.CLIENT_LEVEL
+					,C.CLIENT_LEVEL_OLD
+					,C.CLIENT_NAME
+					,C.CLIENT_OLD_PWD
+					,C.CLIENT_PWD
+					,C.CLIENT_SEQ
+					,C.CLIENT_STATUS
+					,C.CLIENT_TEL
+					,C.GROUP_NAME
+					,C.IP_NO1
+					,C.IP_NO2
+					,C.IP_NO3
+					,C.IS_OLD
+					,C.MASTER_ID
+					,C.MNG_ADDR1
+					,C.MNG_ADDR2
+					,C.MNG_FAX
+					,C.MNG_ORG_CEO
+					,C.MNG_POST
+					,C.MODIFY_DATE
+					,C.MODIFY_ID
+					,C.MO_APPROVAL
+					,C.MO_SMS_NOTI
+					,C.MONTH_SEND_LIMITE
+					,C.ORG_CODE
+					,C.ORG_DEPT
+					,C.ORG_NAME
+					,C.ORG_TITLE
+					,C.REG_DATE
+					,C.REG_ID
+					,C.SERVICE_STATUS
+					,C.SYSTEM_INFO
+					,C.UNIQUE_NO
+					,C.UP_ORG_ID
+					,C.USE_BILLING
+					,C.USE_MMS
+					,C.USE_MO
+					,C.USE_MT
+					,C.USE_ORG
+					,C.USE_SMS
+					,C.USE_SMS_OLD
+					,C.USE_WEB
+					,C.OUTPUT_FORMAT
+					,0 AS IS_ADMIN
+					,C.SERVICE_DATE
+					,B.PAYER_NO
+
+				FROM MGOV.NM_USER C, MGOV.NM_BILLING B
+				WHERE C.CLIENT_ID=B.CLIENT_ID
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,null 			as OUTPUT_FORMAT
+					,1 AS IS_ADMIN
+					,null as SERVICE_DATE
+					,null as PAYER_NO
+				FROM MGOV.NM_ADMIN ) A
+		<where>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME = #{clientName}
+			</if>
+			<if test="payerNo != null and payerNo !='' ">
+				AND PAYER_NO = #{payerNo}
+			</if>
+
+		</where>
+	</select>
+
+
+	<update id="updateAccountAgree" parameterType="AccountDTO">
+
+		UPDATE
+			MGOV.NM_USER
+				SET
+					CLIENT_AGREE=#{clientAgree, jdbcType=VARCHAR}
+					WHERE CLIENT_ID=#{clientId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateAccountAgreeadmin" parameterType="AccountDTO">
+
+		UPDATE
+			MGOV.NM_ADMIN
+				SET
+					CLIENT_AGREE=#{clientAgree, jdbcType=VARCHAR}
+					WHERE CLIENT_ID=#{clientId,jdbcType=VARCHAR}
+
+	</update>
+
+	<update id="updateOrgClient" parameterType="AccountDTO">
+
+		UPDATE
+			MGOV.NM_USER
+				SET
+					  ORG_NAME		=	#{orgName}
+					, ORG_CODE 		= 	#{orgCode}
+					, ORG_DEPT		=	#{orgDept}
+					, ORG_TITLE		=   #{orgTitle}
+					, CLIENT_NAME	=	#{clientName}
+					, UNIQUE_NO		=	#{uniqueNo}
+					, CLIENT_TEL	=	#{clientTel}
+					, CLIENT_CEL	=	#{clientCel}
+					, CLIENT_STATUS	=	#{clientStatus}
+					, GROUP_NAME	=	#{groupName}
+					, CLIENT_PWD	=	#{clientPwd}
+					<if test=' changeClientCel != null and changeClientCel == "Y" '>
+					,CLIENT_AGREE		= 'N'
+					</if>
+					WHERE CLIENT_ID	=	#{clientId,jdbcType=VARCHAR}
+
+	</update>
+
+
+	<!-- 사용자 계정관리리스트 페이지에서 웹발송계정추가 유무를 위한 select -->
+	<select id="userWebYN"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM MGOV.NM_USER WHERE CLIENT_ID=#{clientId}
+	</select>
+
+
+
+	<delete id="deleteAuthMenu" parameterType="AccountDTO">
+		DELETE FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID	= #{clientId} AND MENU_CODE = '0000000294'
+	</delete>
+
+	<delete id="deleteAuthMenu2" parameterType="AccountDTO">
+		DELETE FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID	= #{clientId} AND MENU_CODE = '0000000321'
+	</delete>
+	<delete id="deleteAuthMenu3" parameterType="AccountDTO">
+		DELETE FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID	= #{clientId} AND MENU_CODE = '0000000323'
+	</delete>
+	<delete id="deleteAuthMenu4" parameterType="AccountDTO">
+		DELETE FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID	= #{clientId} AND MENU_CODE = '0000000324'
+	</delete>
+
+
+	<insert id="insertUserMenu" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_MENU_AUTHORITY (
+			  CLIENT_ID
+			, MENU_CODE
+			, IS_ADMIN
+			, MENU_DELETE
+			, MENU_WRITE
+			, MENU_READ
+		)VALUES(
+			  #{clientId}
+			, '0000000321'
+			, '0'
+			, '1'
+			, '1'
+			, '1'
+
+		)
+	</insert>
+
+	<insert id="insertUserMenu2" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_MENU_AUTHORITY (
+			  CLIENT_ID
+			, MENU_CODE
+			, IS_ADMIN
+			, MENU_DELETE
+			, MENU_WRITE
+			, MENU_READ
+		)VALUES(
+			  #{clientId}
+			, '0000000294'
+			, '0'
+			, '1'
+			, '1'
+			, '1'
+
+		)
+	</insert>
+
+	<insert id="insertUserMenu3" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_MENU_AUTHORITY (
+			  CLIENT_ID
+			, MENU_CODE
+			, IS_ADMIN
+			, MENU_DELETE
+			, MENU_WRITE
+			, MENU_READ
+		)VALUES(
+			  #{clientId}
+			, '0000000324'
+			, '0'
+			, '1'
+			, '1'
+			, '1'
+
+		)
+	</insert>
+
+	<insert id="insertUserMenu4" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_MENU_AUTHORITY (
+			  CLIENT_ID
+			, MENU_CODE
+			, IS_ADMIN
+			, MENU_DELETE
+			, MENU_WRITE
+			, MENU_READ
+		)VALUES(
+			  #{clientId}
+			, '0000000323'
+			, '0'
+			, '1'
+			, '1'
+			, '1'
+
+		)
+	</insert>
+
+	<select id="userMenuYN"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID=#{clientId} AND MENU_CODE='0000000294'
+	</select>
+	<select id="userMenuYN2"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID=#{clientId} AND MENU_CODE='0000000321'
+	</select>
+	<select id="userMenuYN3"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID=#{clientId} AND MENU_CODE='0000000323'
+	</select>
+	<select id="userMenuYN4"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT * FROM MGOV.NM_MENU_AUTHORITY WHERE CLIENT_ID=#{clientId} AND MENU_CODE='0000000324'
+	</select>
+
+	<select id="getUserMessage" parameterType="AccountDTO" resultType="map">
+		SELECT USE_WEB as useWeb FROM MGOV.NM_USER WHERE CLIENT_ID = #{clientId}
+	</select>
+
+	<!-- 아이디중복체크수정20161009 -->
+	<select id="accountGetDataCheck"  parameterType="AccountDTO" resultType="AccountDTO">
+
+	SELECT * FROM (
+		SELECT CLIENT_ID FROM MGOV.NM_USER UNION ALL
+		SELECT CLIENT_ID FROM MGOV.NM_ADMIN
+
+	) A WHERE CLIENT_ID = #{clientId}
+
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="accountGetDataSearch"  parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			AUTH
+			,CHANGE_STATUS
+			,CLIENT_CEL
+			,CLIENT_ID
+			,CLIENT_LEVEL
+			,(SELECT LEVEL_NAME FROM MGOV.NM_LEVEL WHERE CLIENT_LEVEL = A.CLIENT_LEVEL ) AS LEVEL_NAME
+			,CLIENT_LEVEL_OLD
+			,CLIENT_NAME
+			,CLIENT_OLD_PWD
+			,CLIENT_PWD
+			,CLIENT_SEQ
+			,CLIENT_STATUS
+			,CLIENT_TEL
+			,GROUP_NAME
+			,IP_NO1
+			,IP_NO2
+			,IP_NO3
+			,IS_OLD
+			,MASTER_ID
+			,MNG_ADDR1
+			,MNG_ADDR2
+			,MNG_FAX
+			,MNG_ORG_CEO
+			,MNG_POST
+			,MODIFY_DATE
+			,MODIFY_ID
+			,MO_APPROVAL
+			,MO_SMS_NOTI
+			,MONTH_SEND_LIMITE
+			,ORG_CODE
+			,ORG_DEPT
+			,ORG_NAME
+			,ORG_TITLE
+			,REG_DATE
+			,REG_ID
+			,SERVICE_STATUS
+			,SYSTEM_INFO
+			,UNIQUE_NO
+			,UP_ORG_ID
+			,USE_BILLING
+			,USE_MMS
+			,USE_MO
+			,USE_MT
+			,USE_ORG
+			,USE_SMS
+			,USE_SMS_OLD
+			,USE_WEB
+			,IS_ADMIN
+			,OUTPUT_FORMAT
+			,(SELECT CLIENT_NAME FROM MGOV.NM_USER WHERE CLIENT_ID = A.UP_ORG_ID) as UP_ORG_NAME
+			,SERVICE_DATE
+			,PAYER_NO
+			,SERVICE_NAME1
+			,SERVICE_TEL1
+			,SERVICE_NAME2
+			,SERVICE_TEL2
+			,CLIENT_MAIL
+	    FROM
+			(SELECT
+					C.AUTH
+					,C.CHANGE_STATUS
+					,C.CLIENT_CEL
+					,C.CLIENT_ID
+					,C.CLIENT_LEVEL
+					,C.CLIENT_LEVEL_OLD
+					,C.CLIENT_NAME
+					,C.CLIENT_OLD_PWD
+					,C.CLIENT_PWD
+					,C.CLIENT_SEQ
+					,C.CLIENT_STATUS
+					,C.CLIENT_TEL
+					,C.GROUP_NAME
+					,C.IP_NO1
+					,C.IP_NO2
+					,C.IP_NO3
+					,C.IS_OLD
+					,C.MASTER_ID
+					,C.MNG_ADDR1
+					,C.MNG_ADDR2
+					,C.MNG_FAX
+					,C.MNG_ORG_CEO
+					,C.MNG_POST
+					,C.MODIFY_DATE
+					,C.MODIFY_ID
+					,C.MO_APPROVAL
+					,C.MO_SMS_NOTI
+					,C.MONTH_SEND_LIMITE
+					,C.ORG_CODE
+					,C.ORG_DEPT
+					,C.ORG_NAME
+					,C.ORG_TITLE
+					,C.REG_DATE
+					,C.REG_ID
+					,C.SERVICE_STATUS
+					,C.SYSTEM_INFO
+					,C.UNIQUE_NO
+					,C.UP_ORG_ID
+					,C.USE_BILLING
+					,C.USE_MMS
+					,C.USE_MO
+					,C.USE_MT
+					,C.USE_ORG
+					,C.USE_SMS
+					,C.USE_SMS_OLD
+					,C.USE_WEB
+					,C.OUTPUT_FORMAT
+					,0 AS IS_ADMIN
+					,C.SERVICE_DATE
+					,B.PAYER_NO
+					,C.SERVICE_NAME1
+					,C.SERVICE_TEL1
+					,C.SERVICE_NAME2
+					,C.SERVICE_TEL2
+					,C.CLIENT_MAIL
+
+				FROM MGOV.NM_USER C, MGOV.NM_BILLING B
+				WHERE C.CLIENT_ID=B.CLIENT_ID
+				UNION ALL
+				SELECT
+					AUTH 			AS AUTH
+					,null			AS CHANGE_STATUS
+					,CLIENT_CEL 	AS CLIENT_CEL
+					,CLIENT_ID 		AS CLIENT_ID
+					,CLIENT_LEVEL 	AS CLIENT_LEVEL
+					,null 			AS CLIENT_LEVEL_OLD
+					,CLIENT_NAME 	AS CLIENT_NAME
+					,null 			AS CLIENT_OLD_PWD
+					,CLIENT_PWD 	AS CLIENT_PWD
+					,null 			AS CLIENT_SEQ
+					,CLIENT_STATUS 	AS CLIENT_STATUS
+					,CLIENT_TEL 	AS CLIENT_TEL
+					,null 			AS GROUP_NAME
+					,null 			AS IP_NO1
+					,null 			AS IP_NO2
+					,null 			AS IP_NO3
+					,null 			AS IS_OLD
+					,null 			AS MASTER_ID
+					,null 			AS MNG_ADDR1
+					,null 			AS MNG_ADDR2
+					,null 			AS MNG_FAX
+					,null 			AS MNG_ORG_CEO
+					,null 			AS MNG_POST
+					,MODIFY_DATE 	AS MODIFY_DATE
+					,null 			AS MODIFY_ID
+					,null 			AS MO_APPROVAL
+					,null 			AS MO_SMS_NOTI
+					,null 			AS MONTH_SEND_LIMITE
+					,ORG_CODE 		AS ORG_CODE
+					,null 			AS ORG_DEPT
+					,ORG_NAME 		AS ORG_NAME
+					,null 			AS ORG_TITLE
+					,REG_DATE		AS REG_DATE
+					,null 			AS REG_ID
+					,null 			AS SERVICE_STATUS
+					,null 			AS SYSTEM_INFO
+					,null 			AS UNIQUE_NO
+					,null 			AS UP_ORG_ID
+					,null 			AS USE_BILLING
+					,null 			AS USE_MMS
+					,null 			AS USE_MO
+					,null 			AS USE_MT
+					,null 			AS USE_ORG
+					,null 			AS USE_SMS
+					,null 			AS USE_SMS_OLD
+					,USE_WEB		AS USE_WEB
+					,null 			as OUTPUT_FORMAT
+					,1 AS IS_ADMIN
+					,null as SERVICE_DATE
+					,null as PAYER_NO
+					,null as SERVICE_NAME1
+					,null as SERVICE_TEL1
+					,null as SERVICE_NAME2
+					,null as SERVICE_TEL2
+					,null as CLIENT_MAIL
+				FROM MGOV.NM_ADMIN ) A
+		<where>
+			<if test="clientId != null and clientId !='' ">
+				AND CLIENT_ID = #{clientId}
+			</if>
+			<if test="isAdmin != null and isAdmin !='' ">
+				AND IS_ADMIN = #{isAdmin}
+			</if>
+			<if test="clientCel != null and clientCel !='' ">
+				AND CLIENT_CEL = #{clientCel}
+			</if>
+			<if test="clientName != null and clientName !='' ">
+				AND CLIENT_NAME = #{clientName}
+			</if>
+			<if test="payerNo != null and payerNo !='' ">
+				AND PAYER_NO = #{payerNo}
+			</if>
+
+		</where>
+	</select>
+	
+	<select id="lgSubscriptionData" parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT
+			U.client_seq	AS	CLIENT_SEQ
+			,U.CLIENT_ID	AS 	CLIENT_ID
+			,U.SERVICE_STATUS	AS 	SERVICE_STATUS
+			
+			,B.BILL_METHOD	AS BILL_METHOD
+			,B.BANK_NAME    AS BANK_NAME
+			,B.BANK_NO      AS BANK_NO
+			,B.BANK_OWNER   AS BANK_OWNER
+			,B.BANK_REG_NO  AS BANK_REG_NO
+			,B.PAYER_NO	AS	BILL_NO
+			,B.PAYER_ORG  AS BILL_DEPT
+			,B.PAYER_NAME   AS BILL_NAME
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'1') AS BILL_TEL_01
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'2') AS BILL_TEL_02
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'3') AS BILL_TEL_03     
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'1') AS BILL_FAX_01
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'2') AS BILL_FAX_02
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'3') AS BILL_FAX_03
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'1') AS BILL_CEL_01
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'2') AS BILL_CEL_02
+			,MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'3') AS BILL_CEL_03
+			,SUBSTR(B.PAYER_MAIL,1,(INSTR(B.PAYER_MAIL,'@')-1)) AS BILL_EMAIL_01  
+			,SUBSTR(B.PAYER_MAIL,(INSTR(B.PAYER_MAIL,'@')+1)) AS BILL_EMAIL_02  
+			
+			,B.PAYER_POST   AS BILL_POST
+			,B.PAYER_ADDR1  AS BILL_ADDR1
+			,B.PAYER_ADDR2  AS BILL_ADDR2
+			,U.ORG_NAME		AS ORG_NAME
+			,U.ORG_DEPT		AS ORG_DEPT
+			,U.CLIENT_NAME 	AS PIC_NAME
+			,U.CLIENT_ID  	AS CLIENT_ID
+			,U.MNG_ORG_CEO	AS ORG_CEO
+			,U.UNIQUE_NO  AS ORG_NO
+			,to_char(U.MODIFY_DATE,'yyyymmddhh24miss') AS MODIFY_DATE
+			,to_char(U.REG_DATE,'yyyymmddhh24miss') AS REG_DATE
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'1') AS PIC_TEL_01
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'2') AS PIC_TEL_02
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'3') AS PIC_TEL_03    					
+			,MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'1')    AS PIC_FAX_01
+			,MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'2')    AS PIC_FAX_02
+			,MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'3')    AS PIC_FAX_03 
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'1') AS PIC_CEL_01
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'2') AS PIC_CEL_02
+			,MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'3') AS PIC_CEL_03 			
+			,SUBSTR(U.CLIENT_MAIL,1,(INSTR(U.CLIENT_MAIL,'@')-1)) AS PIC_EMAIL_01  
+			,SUBSTR(U.CLIENT_MAIL,(INSTR(U.CLIENT_MAIL,'@')+1)) AS PIC_EMAIL_02				   	
+			,U.MNG_POST		AS PIC_POST
+			,U.MNG_ADDR1	AS PIC_ADDR1
+			,U.MNG_ADDR2	AS PIC_ADDR2
+		
+		FROM 
+		    MGOV.NM_USER U, MGOV.NM_BILLING B
+		WHERE 
+		    U.CLIENT_ID=B.CLIENT_ID
+			AND U.SERVICE_STATUS IN('REPT', 'MODI', 'CANC')
+			AND (to_char(U.REG_DATE,'yyyymmdd') = #{regDate} or to_char(U.MODIFY_DATE,'yyyymmdd') = #{modifyDate})
+		ORDER BY 
+			U.MODIFY_DATE DESC
+	</select>
+	
+	<update id="lgUpdateData1" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER
+		SET SERVICE_STATUS = #{serviceStatus}
+		WHERE  CLIENT_ID	= #{clientId}
+
+	</update>
+	
+	<update id="lgUpdateData2" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER SET 
+			  SERVICE_STATUS = #{serviceStatus}
+			, CHANGE_STATUS	= null
+			, N_STATUS = 'CF'
+		WHERE  CLIENT_ID	= #{clientId}
+
+	</update>
+	
+	<update id="lgUpdateData3" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER SET 
+			  SERVICE_STATUS = 'LGRE'
+			, CHANGE_STATUS	= 'Y'
+			, N_STATUS = 'CT'
+		WHERE  CLIENT_ID	= #{clientId}
+
+	</update>
+	
+	<insert id="addLgHistoryData" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_LG_HISTORY (
+			  LG_REQ_DATE
+			, LG_TO_DATE
+			, LG_TYPE
+			, LG_COUNT
+ 
+		)VALUES(
+			 #{lgReqDate}		 
+			, sysdate
+			, #{lgType}
+			, #{lgCount}
+
+
+		)
+	</insert>
+	
+	<insert id="addLgHistoryData2" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_LG_HISTORY (
+			  LG_REQ_DATE
+			, LG_TO_DATE
+			, LG_CLIENT_ID
+			, LG_TYPE
+			, LG_COUNT
+			, LG_SERVICE_STATUS
+ 
+ 
+ 
+		)VALUES(
+			 sysdate		 
+			, sysdate
+			, #{lgClientId}
+			, #{lgType}
+			, '1'
+			, #{serviceStatus}
+		)
+	</insert>
+	
+	<insert id="addLgHistoryData3" parameterType="AccountDTO">
+		 INSERT INTO MGOV.NM_LG_HISTORY (
+			  LG_REQ_DATE
+			, LG_TO_DATE
+			, LG_CLIENT_ID
+			, LG_TYPE
+			, LG_COUNT
+			, LG_CHANGE_STATUS
+			, LG_N_STATUS
+			, LG_SERVICE_STATUS
+ 
+ 
+ 
+		)VALUES(
+			 sysdate		 
+			, sysdate
+			, #{lgClientId}
+			, #{lgType}
+			, '1'
+			, #{lgChangeStatus}
+			, #{lgNStatus}
+			, #{serviceStatus}
+
+
+		)
+	</insert>
+ 
+ 
+ <!-- 해지처리추가(20170629) -->
+	<update id="stopAccountStatus" parameterType="AccountDTO">
+		UPDATE MGOV.NM_USER SET
+			  CLIENT_STATUS = '3'
+			, SERVICE_STATUS = 'CANC'
+			, CLIENT_MEMO = #{clientMemo}
+		WHERE CLIENT_ID	= #{clientId}
+ 
+	</update>
+	
+	<!-- NM_USER에 있는 모든 CLIENT_ID 목록  가져오기-->
+	<select id="findAllClientId" resultType="String">
+		SELECT CLIENT_ID
+		FROM NM_USER
+	</select>
+	
+	<select id="findUserByClientId" parameterType="AccountDTO" resultType="AccountDTO">
+		SELECT *
+		FROM NM_USER
+		WHERE CLIENT_ID = #{clientId}
+	</select>
+	
+    <select id="fullSubscriptionData" parameterType="AccountDTO" resultType="AccountDTO">
+    SELECT
+        U.CLIENT_SEQ AS  CLIENT_SEQ
+    ,   U.CLIENT_ID AS  CLIENT_ID
+    ,   U.SERVICE_STATUS   AS  SERVICE_STATUS
+    ,   B.BILL_METHOD  AS BILL_METHOD
+    ,   B.BANK_NAME    AS BANK_NAME
+    ,   B.BANK_NO      AS BANK_NO
+    ,   B.BANK_OWNER   AS BANK_OWNER
+    ,   B.BANK_REG_NO  AS BANK_REG_NO
+    ,   B.PAYER_NO AS  BILL_NO
+    ,   B.PAYER_ORG  AS BILL_DEPT
+    ,   B.PAYER_NAME   AS BILL_NAME
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'1') AS BILL_TEL_01
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'2') AS BILL_TEL_02
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_TEL,'3') AS BILL_TEL_03
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'1') AS BILL_FAX_01
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'2') AS BILL_FAX_02
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_FAX,'3') AS BILL_FAX_03
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'1') AS BILL_CEL_01
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'2') AS BILL_CEL_02
+    ,   MGOV.GET_PHONE_FORMAT(B.PAYER_CEL,'3') AS BILL_CEL_03
+    ,   SUBSTR(B.PAYER_MAIL,1,(INSTR(B.PAYER_MAIL,'@')-1)) AS BILL_EMAIL_01
+    ,   SUBSTR(B.PAYER_MAIL,(INSTR(B.PAYER_MAIL,'@')+1)) AS BILL_EMAIL_02
+    ,   B.PAYER_POST   AS BILL_POST
+    ,   B.PAYER_ADDR1  AS BILL_ADDR1
+    ,   B.PAYER_ADDR2  AS BILL_ADDR2
+    ,   U.ORG_NAME     AS ORG_NAME
+    ,   U.ORG_DEPT     AS ORG_DEPT
+    ,   U.CLIENT_NAME  AS PIC_NAME
+    ,   U.CLIENT_ID    AS CLIENT_ID
+    ,   U.MNG_ORG_CEO  AS ORG_CEO
+    ,   U.UNIQUE_NO  AS ORG_NO
+    ,   to_char(U.MODIFY_DATE,'yyyymmddhh24miss') AS MODIFY_DATE
+    ,   to_char(U.REG_DATE,'yyyymmddhh24miss') AS REG_DATE
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'1') AS PIC_TEL_01
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'2') AS PIC_TEL_02
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_TEL,'3') AS PIC_TEL_03
+    ,   MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'1')    AS PIC_FAX_01
+    ,   MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'2')    AS PIC_FAX_02
+    ,   MGOV.GET_PHONE_FORMAT(U.MNG_FAX,'3')    AS PIC_FAX_03 
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'1') AS PIC_CEL_01
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'2') AS PIC_CEL_02
+    ,   MGOV.GET_PHONE_FORMAT(U.CLIENT_CEL,'3') AS PIC_CEL_03
+    ,   SUBSTR(U.CLIENT_MAIL,1,(INSTR(U.CLIENT_MAIL,'@')-1)) AS PIC_EMAIL_01
+    ,   SUBSTR(U.CLIENT_MAIL,(INSTR(U.CLIENT_MAIL,'@')+1)) AS PIC_EMAIL_02
+    ,   U.MNG_POST     AS PIC_POST
+    ,   U.MNG_ADDR1    AS PIC_ADDR1
+    ,   U.MNG_ADDR2    AS PIC_ADDR2
+    ,   U.ORG_TITLE    AS ORG_TITLE
+    FROM MGOV.NM_USER U, MGOV.NM_BILLING B
+    WHERE U.CLIENT_ID=B.CLIENT_ID
+    ORDER BY U.MODIFY_DATE DESC
+    </select>
+    
+    <!-- 2021-12-06 앱메시지 관련 추가 -->
+    
+    <select id="getSenderKey" parameterType="SenderKeyDTO" resultType="SenderKeyDTO">
+    SELECT * FROM MGOV.BIZM_SENDERKEY
+    <where>
+    	<if test="clientId != null and clientId != ''">
+    		AND CLIENT_ID = #{clientId}
+    	</if>
+    </where>
+    </select>
+    
+    <insert id="addSenderKey" parameterType="SenderKeyDTO">
+    INSERT INTO 
+    	MGOV.BIZM_SENDERKEY
+    	(
+    		CLIENT_ID
+		    , KAKAO_CHANNEL_ID
+		    , KAKAO_KEY
+            , NAVER_CHANNEL_ID
+            , NAVER_KEY
+            , TOSS_CHANNEL_ID
+            , TOSS_KEY
+            , SUB_YN
+            , REGI_ID
+            , REGI_DATE
+		)
+	    VALUES 
+	    (
+	    	#{clientId}
+	        , #{kakaoChannelId, jdbcType=VARCHAR}
+	        , #{kakaoKey, jdbcType=VARCHAR}
+	        , #{naverChannelId, jdbcType=VARCHAR}
+	        , #{naverKey, jdbcType=VARCHAR}
+	        , #{tossChannelId , jdbcType=VARCHAR}
+	        , #{tossKey, jdbcType=VARCHAR}
+	        , 'N'
+	        , #{regiId}
+	        , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+	    )
+    </insert>
+    
+    <update id="updateSenderKey" parameterType="SenderKeyDTO">
+    UPDATE MGOV.BIZM_SENDERKEY
+    SET
+    	KAKAO_CHANNEL_ID = #{kakaoChannelId, jdbcType=VARCHAR}
+    	, KAKAO_KEY = #{kakaoKey, jdbcType=VARCHAR}
+    	, NAVER_CHANNEL_ID = #{naverChannelId, jdbcType=VARCHAR}
+    	, NAVER_KEY = #{naverKey, jdbcType=VARCHAR}
+    	, TOSS_CHANNEL_ID = #{tossChannelId, jdbcType=VARCHAR}
+    	, TOSS_KEY = #{tossKey, jdbcType=VARCHAR}
+    	, MODI_ID = #{modiId}
+    	, MODI_DATE = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+    WHERE
+    	CLIENT_ID = #{clientId}
+    </update>
+    
+    <delete id="deleteSenderKey" parameterType="SenderKeyDTO">
+    DELETE FROM BIZM_SENDERKEY WHERE CLIENT_ID = #{clientId}
+    </delete>
+    
+    <select id="checkSenderKey" parameterType="SenderKeyDTO" resultType="int">
+    SELECT COUNT(*) FROM BIZM_SENDERKEY WHERE CLIENT_ID = #{clientId}
+    </select>
+    
+    <!-- 2022-04-20 기관계정에 연결되어있는 팀계정 목록 가져오기 -->
+    <select id="getTeamClientIds" parameterType="String" resultType="String">
+    SELECT 
+    	CLIENT_ID 
+    FROM 
+    	MGOV.NM_USER 
+    WHERE 
+    	UP_ORG_ID = #{ value } 
+    	AND CLIENT_LEVEL = 50
+    </select>
+    
+    <!-- 계정 존재여부 확인을 위한 카운트 조회 -->
+    <select id="countUser" parameterType="AccountDTO" resultType="int">
+    SELECT
+    	COUNT(*)
+    FROM
+    	MGOV.NM_USER
+    WHERE
+    	CLIENT_ID = #{clientId}
+    </select>
+    
+    <!-- API -->
+    <select id="getAccountListApi" parameterType="map" resultType="map">
+    SELECT 
+	    *
+	FROM 
+	(
+	    SELECT
+		    ROW_NUMBER() OVER(ORDER BY nu.CLIENT_ID ASC) AS RN,
+		    nu.CLIENT_ID ,
+		    nu.SYSTEM_INFO ,
+		    nu.UNIQUE_NO ,
+		    nu.ORG_TITLE ,
+		    nu.SERVICE_STATUS ,
+		    nu.CLIENT_MEMO ,
+		    nb.BILL_METHOD ,
+		    nb.BANK_NO ,
+		    nb.BANK_REG_NO ,
+		    nb.BANK_OWNER ,
+		    nb.BANK_NAME ,
+		    nb.PAYER_NO ,
+		    nb.PAYER_ORG ,
+		    nb.PAYER_NAME ,
+		    nb.PAYER_TEL ,
+		    nb.PAYER_CEL ,
+		    nb.PAYER_MAIL ,
+		    nb.PAYER_FAX ,
+		    nb.PAYER_POST ,
+		    nb.PAYER_ADDR1 ,
+		    nb.PAYER_ADDR2 ,
+		    bs.KAKAO_CHANNEL_ID ,
+		    bs.KAKAO_KEY ,
+		    bs.NAVER_CHANNEL_ID ,
+		    bs.NAVER_KEY 
+		FROM
+		    MGOV.NM_USER nu ,
+		    MGOV.NM_BILLING nb ,
+		    MGOV.BIZM_SENDERKEY bs 
+		WHERE 
+		    nu.CLIENT_ID = nb.CLIENT_ID (+)
+		    AND nu.CLIENT_ID = bs.CLIENT_ID (+)
+		    AND nu.CLIENT_LEVEL = '50'
+		    AND nu.SERVICE_STATUS IN
+		    <foreach collection="serviceStatusList" item="serviceStatus" open="(" separator="," close=")">
+		    	#{serviceStatus}
+		    </foreach>
+	)
+	WHERE 
+	    RN BETWEEN #{start} AND #{end}
+    </select>
+    
+    <select id="countAccountApi" parameterType="map" resultType="int">
+    	SELECT 
+    		COUNT(*)
+    	FROM 
+    		MGOV.NM_USER 
+    	WHERE 
+    		CLIENT_LEVEL = '50'
+		    AND SERVICE_STATUS IN
+		    <foreach collection="serviceStatusList" item="serviceStatus" open="(" separator="," close=")">
+		    	#{serviceStatus}
+		    </foreach>
+    </select>
+    
+    <update id="updateAccountServiceStatusApi" parameterType="map">
+    	UPDATE MGOV.NM_USER
+    	SET
+    		MODIFY_ID = #{modifyId}
+    		, MODIFY_DATE = SYSDATE
+    		, CHANGE_STATUS = 'Y'
+    		, N_STATUS = 'CT'
+    		, SERVICE_STATUS = #{serviceStatus}
+    	WHERE
+    		CLIENT_ID = #{clientId}
+    </update>
+</mapper>

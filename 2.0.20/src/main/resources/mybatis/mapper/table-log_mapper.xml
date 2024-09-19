@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="log">
+
+    <select id="getMovalbeDataList" parameterType="HashMap" resultType="long">
+        SELECT
+            MSG_SEQ
+        FROM
+            ${tableName}
+        <where>
+            <if test="useLms">
+            ( CUR_STATE = 2 AND RSLT_CODE_APP = '0000' )
+            OR ( CUR_STATE = 3 AND RSLT_CODE_APP != 'G902' )
+            </if>
+            <if test="!useLms">
+            ( CUR_STATE = 2 )
+            </if>
+        </where> 
+    </select>
+
+    <insert id="sendDataLog" parameterType="HashMap">
+        INSERT INTO
+            ${tableNameDest}
+        SELECT 
+            *
+        FROM 
+            ${tableNameSrc}
+        WHERE
+            MSG_SEQ IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </insert>
+
+    <delete id="deleteData" parameterType="HashMap">
+        DELETE
+        FROM ${tableName}
+        WHERE
+            MSG_SEQ IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

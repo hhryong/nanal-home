@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dataTreat">
+    <select id="selectTemplateCode" parameterType="HashMap" resultType="TemplateCodeInfo">
+        SELECT  APP_GUBUN     AS appGubun,
+                TEMPLATE_CODE AS templateCode,
+                HEAD          AS header,
+                FOOT          AS foot,
+                TITLE         AS title,
+                USE_BUTTON    AS useButton
+        FROM    ${tableName}
+        WHERE   APP_GUBUN = #{appGubun}
+                AND TEMPLATE_CODE = #{templateCode}
+    </select>
+
+    <select id="checkExistNuriContents" resultType="int" parameterType="LmsContentsInfo">
+        SELECT COUNT(*)
+        FROM ${tableName}
+        WHERE CONT_SEQ = #{contSeq}
+    </select>
+
+    <select id="selectAppSendDataForSms" parameterType="HashMap" resultType="AppSendData">
+        SELECT  *
+        FROM    ${tableName}
+        WHERE   CUR_STATE = 0
+                AND REQ_SEND_DATE BETWEEN #{prevDate} AND #{currentDate}
+                AND GAON_MSG_TYPE = 'S'
+        ORDER BY MSG_SEQ
+    </select>
+
+    <update id="updateAppSendContentsState" parameterType="HashMap">
+        UPDATE ${tableName}
+        SET CUR_STATE = #{curState}
+        WHERE PACK_UNIQUEKEY = #{packUniquekey}
+    </update>
+
+    <update id="updateAppSendDataState" parameterType="HashMap">
+        UPDATE ${tableName}
+        SET CUR_STATE = #{curState}
+        <where>
+            <if test="packUniquekey != null and packUniquekey != ''">
+                AND PACK_UNIQUEKEY = #{packUniquekey}
+            </if>
+            <if test="phoneNumber != null and phoneNumber != ''">
+                AND PHONE_NUM = #{phoneNumber}
+            </if>
+            <if test="msgSeq != null and msgSeq != ''">
+                AND MSG_SEQ = #{msgSeq}
+            </if>
+        </where>
+    </update>
+
+    <update id="updateAppSendDataInvaild" parameterType="HashMap">
+        UPDATE
+            ${tableName}
+        SET
+            CUR_STATE = #{curState}
+            , RSLT_CODE_APP = #{rsltCodeApp}
+        WHERE
+            MSG_SEQ = #{msgSeq}
+    </update>
+
+    <update id="updateAppSendDataCurStateSendComplte" parameterType="HashMap">
+        UPDATE ${tableName}
+        SET CUR_STATE = #{curState},
+            MODULE_SEND_TIME = #{moduleSendTime},
+            SERIAL_NUMBER = #{serialNumber}
+        WHERE MSG_SEQ = #{msgSeq} AND CUR_STATE = 0
+    </update>
+
+    <update id="updateAppSendDataNuriMsgSeq" parameterType="HashMap">
+        UPDATE ${tableName}
+        SET NURI_MSG_SEQ = #{data.nuriMsgSeq}
+        WHERE MSG_SEQ = #{data.msgSeq}
+    </update>
+
+    <update id="updateAppSendDataAfterRespond" parameterType="HashMap">
+        UPDATE ${tableName}
+        SET CUR_STATE            = #{data.curState}
+            , SVR_RECV_TIME      = #{data.serverRecvTime}
+            , RSLT_CODE_APP      = #{data.rsltCodeApp}
+            , APP_RECV_TIME      = #{data.appRecvTime}
+        WHERE
+            CUR_STATE = 1 AND SERIAL_NUMBER = #{data.serialNumber}
+    </update>
+
+    <select id="countAppSendDataWhereCurState" parameterType="HashMap" resultType="int">
+        SELECT COUNT(*)
+        FROM ${tableName}
+        WHERE CUR_STATE = 1
+    </select>
+
+    <select id="getAppSendDataLMSSendableList" parameterType="HashMap" resultType="AppSendData">
+        SELECT 
+          *
+        FROM ${tableName}
+        WHERE
+        <choose>
+            <when test="useLms">
+                ( CUR_STATE = 2 AND RSLT_CODE_APP != '0000' )
+            </when>
+            <otherwise>
+                CUR_STATE = 3
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getAppSendDataLMSSendableListWithCustomColumn" parameterType="HashMap" resultType="com.nanal.map.UpperKeyHashMap">
+        SELECT 
+            AD.*,
+            AC.MSG_DATA,
+            AC.MSG_SUBJECT,
+            TM.HEAD,
+            TM.FOOT
+        FROM ${tableName} AD
+        LEFT JOIN ${contentsTableName} AC ON AD.PACK_UNIQUEKEY = AC.PACK_UNIQUEKEY
+        LEFT JOIN ${templateTableName} TM ON AD.TEMPLATE_CODE = TM.TEMPLATE_CODE
+        WHERE
+            AD.CUR_STATE = 2 
+            AND AD.RSLT_CODE_APP != '0000' 
+    </select>
+
+    <select id="getTemplateCodeInfoList" parameterType="HashMap" resultType="TemplateCodeInfo">
+        SELECT *
+        FROM ${tableName}
+    </select>
+
+    <select id="getAppSendDataBySendUkeyAndPhoneNum" parameterType="AppSendData" resultType="AppSendData">
+        SELECT * FROM ${tableName} WHERE SEND_PACK_UKEY = #{sendPackUkey} AND PHONE_NUM = #{phoneNum} AND CUR_STATE = 4
+    </select>
+
+    <update id="updateAppSendDataResend" parameterType="AppSendData">
+        UPDATE ${tableName}
+        SET CUR_STATE = 0,
+            APP_GUBUN = 'KAKAO'
+        WHERE MSG_SEQ = #{msgSeq}
+    </update>
+
+    <update id="updateAppSendDataServerConnectionFail" parameterType="AppSendData">
+        UPDATE ${tableName}
+        SET CUR_STATE = #{curState},
+            RSLT_CODE_APP = #{rsltCodeApp}
+        WHERE MSG_SEQ = #{msgSeq}
+    </update>
+
+    <select id="getAppSendDataList" parameterType="HashMap" resultType="AppSendData">
+        SELECT sd.*, sc.MSG_SUBJECT, sc.MSG_DATA, sc.ATTACHMENT, tc.HEAD, tc.USE_BUTTON, tc.TITLE, tc.FOOT FROM ${tableName} sd
+        LEFT JOIN ${contentsName} sc ON sd.PACK_UNIQUEKEY = sc.PACK_UNIQUEKEY
+        LEFT JOIN ${templateName} tc ON sd.TEMPLATE_CODE = tc.TEMPLATE_CODE AND sd.APP_GUBUN = tc.APP_GUBUN
+        WHERE
+            sd.CUR_STATE = 0
+            AND sd.REQ_SEND_DATE BETWEEN #{prevDate} AND #{currentDate}
+        ORDER BY sd.MSG_SEQ
+    </select>
+
+    <update id="updateAppSendDataAfterLms" parameterType="AppSendData">
+        UPDATE ${tableName}
+        SET CUR_STATE = #{curState},
+            NURI_MSG_SEQ = #{nuriMsgSeq}
+        WHERE MSG_SEQ = #{msgSeq}
+    </update>
+
+    <update id="updateAppSendDataAfterLms2" parameterType="HashMap">
+        UPDATE ${APP_SEND_DATA_TABLE_NAME}
+        SET CUR_STATE = 3,
+            NURI_MSG_SEQ = #{NURI_MSG_SEQ}
+        WHERE MSG_SEQ = #{MSG_SEQ}
+    </update>
+
+    <!-- 전송 불가 메시지 상태값과 에러코드 업데이트 -->
+    <update id="updateUnsendableMessage" parameterType="AppSendData">
+        UPDATE 
+            ${tableName}
+        SET 
+            CUR_STATE = 9
+            , RSLT_CODE_APP = #{rsltCodeApp}
+        WHERE
+            MSG_SEQ = #{msgSeq}
+    </update>
+
+    <!-- 데이터 에러 코드 설정-->
+    <update id="updateErrorCode" parameterType="AppSendData">
+        UPDATE
+            ${tableName}
+        SET
+            CUR_STATE       = #{curState}
+            , RSLT_CODE_APP   = #{gaonErrorCode}
+        WHERE
+            MSG_SEQ = #{msgSeq}
+    </update>
+
+    <update id="updateTimeoutDataReport" parameterType="AppSendData">
+        UPDATE
+            ${tableName}
+        SET
+            RSLT_CODE_APP      = #{rsltCodeApp}
+            , SVR_RECV_TIME      = #{serverRecvTime}
+            , APP_RECV_TIME      = #{appRecvTime}
+        WHERE
+            SERIAL_NUMBER = #{serialNumber}
+    </update>
+
+    <!-- 타임아웃 데이터 불러오기 -->
+    <select id="selectTimeoutData" parameterType="HashMap" resultType="string">
+        SELECT
+            SERIAL_NUMBER
+        FROM
+            ${tableName}
+        WHERE
+            CUR_STATE = 1
+            AND MODULE_SEND_TIME
+        <![CDATA[<]]>
+        #{limitTime}
+    </select>
+
+    <!-- 타임 아웃 데이터 에러 설정-->
+    <update id="updateTimeoutDataError" parameterType="HashMap">
+        UPDATE
+            ${tableName}
+        SET
+            CUR_STATE       = 2
+            , RSLT_CODE_APP   = 'G902'
+        WHERE
+            SERIAL_NUMBER IN
+        <foreach item="item" collection="serialNumberList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

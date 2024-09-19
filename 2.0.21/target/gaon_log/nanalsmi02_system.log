@@ -1,0 +1,225 @@
+[ INFO][2022-12-09 16:36:43.498] - 가온 모듈 시작
+[ INFO][2022-12-09 16:36:43.502] - ExcludeLmsError set empty array
+[ INFO][2022-12-09 16:36:43.519] - PID : 10644
+[ INFO][2022-12-09 16:36:43.519] - 버전 : 2.0.21
+[ INFO][2022-12-09 16:36:43.520] - 로깅 레벨 : INFO
+[ INFO][2022-12-09 16:36:43.523] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2022-12-09 16:36:43.524] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2022-12-09 16:36:43.524] - DB_DRIVER_NAME : oracle.jdbc.driver.OracleDriver
+[ INFO][2022-12-09 16:36:43.525] - DB_URL : jdbc:oracle:thin:@localhost:1521:xe
+[ INFO][2022-12-09 16:36:43.525] - DB_USER_NAME : c##te**
+[ INFO][2022-12-09 16:36:43.526] - 누리 CONTENTS_INFO 테이블 이름 : NURI_MMS_CONTENTS_INFO
+[ INFO][2022-12-09 16:36:43.526] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2022-12-09 16:36:43.526] - 누리 MSG_DATA 테이블 이름 : NURI_MSG_DATA
+[ INFO][2022-12-09 16:36:43.527] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2022-12-09 16:36:43.527] - 가온 SEND_CONTENTS 테이블 이름 : APP_SEND_CONTENTS111
+[ INFO][2022-12-09 16:36:43.528] - 가온 SEND_DATA 테이블 이름 : APP_SEND_DATA111
+[ INFO][2022-12-09 16:36:43.528] - 가온 SEND_DATA LOG 테이블 이름 : APP_SEND_DATA_LOG111
+[ INFO][2022-12-09 16:36:43.529] - 가온 TEMPLATE_CODE 테이블 이름 : TEMPLATE_CODE
+[ INFO][2022-12-09 16:36:43.529] - 앱메시지 실패시 SMS/LMS 발송 여부 : true
+[ INFO][2022-12-09 16:36:43.529] - REALTIME 여부 : true
+[ INFO][2022-12-09 16:36:43.530] - 로그 테이블 생성 옵션 : ONE
+[ INFO][2022-12-09 16:36:43.530] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2022-12-09 16:36:43.530] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2022-12-09 16:36:43.531] - 연락처 별 발송량 제한 : 0
+[ INFO][2022-12-09 16:36:43.531] - 발송 제한 시간 : 180000 ~ 090000
+[ INFO][2022-12-09 16:36:43.531] - 로그 테이블 이관 여부: true
+[ INFO][2022-12-09 16:36:43.532] - LMS 발송 제외 에러 
+[ INFO][2022-12-09 16:36:43.532] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2022-12-09 16:36:43.532] - 접속 시도
+[ERROR][2022-12-09 16:36:48.421] - DB 접속 실패
+org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+### The error may exist in class path resource [mybatis/mapper/createTable-oracle_mapper.xml]
+### The error may involve createTable.ORACLE.getDbTime
+### The error occurred while executing a query
+### Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:77)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy23.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:158)
+	at com.nanal.db.impl.DBCommonImpl.getDbTime(DBCommonImpl.java:162)
+	at com.nanal.db.initializer.Initializer.initialize(Initializer.java:159)
+	at com.nanal.Main.main(Main.java:67)
+Caused by: org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+### The error may exist in class path resource [mybatis/mapper/createTable-oracle_mapper.xml]
+### The error may involve createTable.ORACLE.getDbTime
+### The error occurred while executing a query
+### Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:30)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:150)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	... 5 more
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:80)
+	at org.mybatis.spring.transaction.SpringManagedTransaction.openConnection(SpringManagedTransaction.java:82)
+	at org.mybatis.spring.transaction.SpringManagedTransaction.getConnection(SpringManagedTransaction.java:68)
+	at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:338)
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:84)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	... 13 more
+Caused by: org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1549)
+	at org.apache.commons.dbcp.BasicDataSource.createDataSource(BasicDataSource.java:1388)
+	at org.apache.commons.dbcp.BasicDataSource.getConnection(BasicDataSource.java:1044)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:111)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:77)
+	... 23 more
+Caused by: java.sql.SQLRecoverableException: IO 오류: The Network Adapter could not establish the connection
+	at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:489)
+	at oracle.jdbc.driver.PhysicalConnection.<init>(PhysicalConnection.java:553)
+	at oracle.jdbc.driver.T4CConnection.<init>(T4CConnection.java:254)
+	at oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:32)
+	at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:528)
+	at org.apache.commons.dbcp.DriverConnectionFactory.createConnection(DriverConnectionFactory.java:38)
+	at org.apache.commons.dbcp.PoolableConnectionFactory.makeObject(PoolableConnectionFactory.java:582)
+	at org.apache.commons.dbcp.BasicDataSource.validateConnectionFactory(BasicDataSource.java:1556)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1545)
+	... 27 more
+Caused by: oracle.net.ns.NetException: The Network Adapter could not establish the connection
+	at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:439)
+	at oracle.net.resolver.AddrResolution.resolveAndExecute(AddrResolution.java:454)
+	at oracle.net.ns.NSProtocol.establishConnection(NSProtocol.java:693)
+	at oracle.net.ns.NSProtocol.connect(NSProtocol.java:251)
+	at oracle.jdbc.driver.T4CConnection.connect(T4CConnection.java:1140)
+	at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:340)
+	... 35 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at oracle.net.nt.TcpNTAdapter.connect(TcpNTAdapter.java:149)
+	at oracle.net.nt.ConnOption.connect(ConnOption.java:133)
+	at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:405)
+	... 40 more
+[ INFO][2022-12-09 17:21:25.469] - 가온 모듈 시작
+[ INFO][2022-12-09 17:21:25.474] - ExcludeLmsError set empty array
+[ INFO][2022-12-09 17:21:25.498] - PID : 9148
+[ INFO][2022-12-09 17:21:25.499] - 버전 : 2.0.21
+[ INFO][2022-12-09 17:21:25.499] - 로깅 레벨 : INFO
+[ INFO][2022-12-09 17:21:25.509] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2022-12-09 17:21:25.514] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2022-12-09 17:21:25.516] - DB_DRIVER_NAME : oracle.jdbc.driver.OracleDriver
+[ INFO][2022-12-09 17:21:25.517] - DB_URL : jdbc:oracle:thin:@localhost:1521:xe
+[ INFO][2022-12-09 17:21:25.520] - DB_USER_NAME : c##te**
+[ INFO][2022-12-09 17:21:25.522] - 누리 CONTENTS_INFO 테이블 이름 : NURI_MMS_CONTENTS_INFO
+[ INFO][2022-12-09 17:21:25.523] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2022-12-09 17:21:25.524] - 누리 MSG_DATA 테이블 이름 : NURI_MSG_DATA
+[ INFO][2022-12-09 17:21:25.525] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2022-12-09 17:21:25.526] - 가온 SEND_CONTENTS 테이블 이름 : APP_SEND_CONTENTS111
+[ INFO][2022-12-09 17:21:25.527] - 가온 SEND_DATA 테이블 이름 : APP_SEND_DATA111
+[ INFO][2022-12-09 17:21:25.531] - 가온 SEND_DATA LOG 테이블 이름 : APP_SEND_DATA_LOG111
+[ INFO][2022-12-09 17:21:25.532] - 가온 TEMPLATE_CODE 테이블 이름 : TEMPLATE_CODE
+[ INFO][2022-12-09 17:21:25.533] - 앱메시지 실패시 SMS/LMS 발송 여부 : true
+[ INFO][2022-12-09 17:21:25.541] - REALTIME 여부 : true
+[ INFO][2022-12-09 17:21:25.542] - 로그 테이블 생성 옵션 : ONE
+[ INFO][2022-12-09 17:21:25.543] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2022-12-09 17:21:25.543] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2022-12-09 17:21:25.544] - 연락처 별 발송량 제한 : 0
+[ INFO][2022-12-09 17:21:25.544] - 발송 제한 시간 : 180000 ~ 090000
+[ INFO][2022-12-09 17:21:25.545] - 로그 테이블 이관 여부: true
+[ INFO][2022-12-09 17:21:25.545] - LMS 발송 제외 에러 
+[ INFO][2022-12-09 17:21:25.546] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2022-12-09 17:21:25.546] - 접속 시도
+[ERROR][2022-12-09 17:21:30.573] - DB 접속 실패
+org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+### The error may exist in class path resource [mybatis/mapper/createTable-oracle_mapper.xml]
+### The error may involve createTable.ORACLE.getDbTime
+### The error occurred while executing a query
+### Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:77)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy23.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:158)
+	at com.nanal.db.impl.DBCommonImpl.getDbTime(DBCommonImpl.java:162)
+	at com.nanal.db.initializer.Initializer.initialize(Initializer.java:159)
+	at com.nanal.Main.main(Main.java:67)
+Caused by: org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+### The error may exist in class path resource [mybatis/mapper/createTable-oracle_mapper.xml]
+### The error may involve createTable.ORACLE.getDbTime
+### The error occurred while executing a query
+### Cause: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.apache.ibatis.exceptions.ExceptionFactory.wrapException(ExceptionFactory.java:30)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:150)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	... 5 more
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Could not get JDBC Connection; nested exception is org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:80)
+	at org.mybatis.spring.transaction.SpringManagedTransaction.openConnection(SpringManagedTransaction.java:82)
+	at org.mybatis.spring.transaction.SpringManagedTransaction.getConnection(SpringManagedTransaction.java:68)
+	at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:338)
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:84)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	... 13 more
+Caused by: org.apache.commons.dbcp.SQLNestedException: Cannot create PoolableConnectionFactory (IO 오류: The Network Adapter could not establish the connection)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1549)
+	at org.apache.commons.dbcp.BasicDataSource.createDataSource(BasicDataSource.java:1388)
+	at org.apache.commons.dbcp.BasicDataSource.getConnection(BasicDataSource.java:1044)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:111)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:77)
+	... 23 more
+Caused by: java.sql.SQLRecoverableException: IO 오류: The Network Adapter could not establish the connection
+	at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:489)
+	at oracle.jdbc.driver.PhysicalConnection.<init>(PhysicalConnection.java:553)
+	at oracle.jdbc.driver.T4CConnection.<init>(T4CConnection.java:254)
+	at oracle.jdbc.driver.T4CDriverExtension.getConnection(T4CDriverExtension.java:32)
+	at oracle.jdbc.driver.OracleDriver.connect(OracleDriver.java:528)
+	at org.apache.commons.dbcp.DriverConnectionFactory.createConnection(DriverConnectionFactory.java:38)
+	at org.apache.commons.dbcp.PoolableConnectionFactory.makeObject(PoolableConnectionFactory.java:582)
+	at org.apache.commons.dbcp.BasicDataSource.validateConnectionFactory(BasicDataSource.java:1556)
+	at org.apache.commons.dbcp.BasicDataSource.createPoolableConnectionFactory(BasicDataSource.java:1545)
+	... 27 more
+Caused by: oracle.net.ns.NetException: The Network Adapter could not establish the connection
+	at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:439)
+	at oracle.net.resolver.AddrResolution.resolveAndExecute(AddrResolution.java:454)
+	at oracle.net.ns.NSProtocol.establishConnection(NSProtocol.java:693)
+	at oracle.net.ns.NSProtocol.connect(NSProtocol.java:251)
+	at oracle.jdbc.driver.T4CConnection.connect(T4CConnection.java:1140)
+	at oracle.jdbc.driver.T4CConnection.logon(T4CConnection.java:340)
+	... 35 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.DualStackPlainSocketImpl.waitForConnect(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:85)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:172)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:607)
+	at oracle.net.nt.TcpNTAdapter.connect(TcpNTAdapter.java:149)
+	at oracle.net.nt.ConnOption.connect(ConnOption.java:133)
+	at oracle.net.nt.ConnStrategy.execute(ConnStrategy.java:405)
+	... 40 more
+[ INFO][2022-12-09 17:21:40.596] - 접속 시도

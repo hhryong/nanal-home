@@ -1,0 +1,189 @@
+[ INFO][2023-01-16 11:03:27.439] - 가온 모듈 시작
+[ INFO][2023-01-16 11:03:27.440] - ExcludeLmsError set empty array
+[ INFO][2023-01-16 11:03:27.445] - PID : 21568
+[ INFO][2023-01-16 11:03:27.446] - 버전 : 2.0.22
+[ INFO][2023-01-16 11:03:27.446] - 로깅 레벨 : DEBUG
+[ INFO][2023-01-16 11:03:27.447] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2023-01-16 11:03:27.447] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2023-01-16 11:03:27.448] - DB_DRIVER_NAME : cubrid.jdbc.driver.CUBRIDDriver
+[ INFO][2023-01-16 11:03:27.448] - DB_URL : jdbc:cubrid:localhost:33000:test:::?charset=UTF-8
+[ INFO][2023-01-16 11:03:27.448] - DB_USER_NAME : te**
+[ INFO][2023-01-16 11:03:27.448] - 누리 CONTENTS_INFO 테이블 이름 : nuri_mms_contents_info
+[ INFO][2023-01-16 11:03:27.448] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:03:27.449] - 누리 MSG_DATA 테이블 이름 : nuri_msg_data
+[ INFO][2023-01-16 11:03:27.449] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:03:27.449] - 가온 SEND_CONTENTS 테이블 이름 : app_send_contents111
+[ INFO][2023-01-16 11:03:27.449] - 가온 SEND_DATA 테이블 이름 : app_send_data111
+[ INFO][2023-01-16 11:03:27.449] - 가온 SEND_DATA LOG 테이블 이름 : app_send_data_log111
+[ INFO][2023-01-16 11:03:27.449] - 가온 TEMPLATE_CODE 테이블 이름 : template_code
+[ INFO][2023-01-16 11:03:27.449] - 앱메시지 실패시 SMS/LMS 발송 여부 : false
+[ INFO][2023-01-16 11:03:27.449] - REALTIME 여부 : true
+[ INFO][2023-01-16 11:03:27.449] - 로그 테이블 생성 옵션 : ONE
+[ INFO][2023-01-16 11:03:27.450] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2023-01-16 11:03:27.450] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2023-01-16 11:03:27.450] - 연락처 별 발송량 제한 : 0
+[ INFO][2023-01-16 11:03:27.450] - 발송 제한 시간 : 000000 ~ 000000
+[ INFO][2023-01-16 11:03:27.450] - 로그 테이블 이관 여부: true
+[ INFO][2023-01-16 11:03:27.450] - LMS 발송 제외 에러 
+[ INFO][2023-01-16 11:03:27.450] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2023-01-16 11:03:27.451] - 접속 시도
+[ INFO][2023-01-16 11:03:27.500] - DB 접속 성공
+[ INFO][2023-01-16 11:03:27.501] - app_send_contents111 테이블 생성 시작
+[DEBUG][2023-01-16 11:03:27.525] - MYBATIS_ID : createTable.CUBRID.createAppSendContents, SQL QUERY : CREATE TABLE app_send_contents111 ( REQ_SEND_DATE CHAR(14), PACK_UNIQUEKEY NUMERIC(11) AUTO_INCREMENT NOT NULL, MSG_SUBJECT VARCHAR(50), MSG_DATA VARCHAR(3000) NOT NULL, MSG_TYPE CHAR(2) NOT NULL, HEADER VARCHAR(32), BTN_CNT NUMERIC(1) DEFAULT 0, ATTACHMENT VARCHAR(5000), LINK_CNT NUMERIC(1) DEFAULT 0, SUPPLEMENT VARCHAR(5000), PHONE_CNT NUMERIC(11) DEFAULT 0 NOT NULL, CUR_STATE NUMERIC(1) DEFAULT 0, CONSTRAINT app_send_contents111_PK1 PRIMARY KEY ( PACK_UNIQUEKEY ) ) CHARSET UTF8	PARAMETERS : {charset=UTF8, tableName=app_send_contents111}
+[ INFO][2023-01-16 11:03:27.526] - app_send_contents111 테이블 생성 완료
+[ INFO][2023-01-16 11:03:27.526] - app_send_data111 테이블 생성 시작
+[DEBUG][2023-01-16 11:03:27.533] - MYBATIS_ID : createTable.CUBRID.createAppSendData, SQL QUERY : CREATE TABLE app_send_data111 ( MSG_SEQ NUMERIC(11) AUTO_INCREMENT NOT NULL, REQ_SEND_DATE CHAR(14) NOT NULL, PACK_UNIQUEKEY NUMERIC(11), PHONE_NUM VARCHAR(12) NOT NULL, NURI_MSG_SEQ NUMERIC(11), USER_SEQ NUMERIC(11), CUR_STATE NUMERIC(1) DEFAULT 0, APP_GUBUN VARCHAR(8) NOT NULL, CALL_BACK VARCHAR(12) NOT NULL, SUB_ID VARCHAR(30), GAON_MSG_TYPE CHAR(1) NOT NULL, SMS_MSG_DATA VARCHAR(135), TEMPLATE_CODE VARCHAR(40) NOT NULL, RSLT_CODE_APP CHAR(4), MODULE_SEND_TIME CHAR(14), SVR_RECV_TIME CHAR(14), APP_SEND_TIME CHAR(14), APP_RECV_TIME CHAR(14), SERIAL_NUMBER VARCHAR(39), SEND_PACK_UKEY NUMERIC(11), COLUMN1 VARCHAR(100), CONSTRAINT app_send_data111_PK PRIMARY KEY ( MSG_SEQ ) )CHARSET UTF8	PARAMETERS : {charset=UTF8, customColumn=COLUMN1 VARCHAR(100),, tableName=app_send_data111}
+[DEBUG][2023-01-16 11:03:27.534] - MYBATIS_ID : common.createUniqueIndex, SQL QUERY : CREATE UNIQUE INDEX app_send_data111_SERIAL_IDX ON app_send_data111 (SERIAL_NUMBER)	PARAMETERS : CustomIndexInfo(indexName=app_send_data111_SERIAL_IDX, targetTableName=app_send_data111, columns=SERIAL_NUMBER)
+[ INFO][2023-01-16 11:03:27.539] - INDEX NAME - TEST_INDEX, TARGET TABLE - app_send_data111, COLUMNS - SUB_ID DESC, CALL_BACK ASC
+[DEBUG][2023-01-16 11:03:27.539] - MYBATIS_ID : common.createIndex, SQL QUERY : CREATE INDEX TEST_INDEX ON app_send_data111 (SUB_ID DESC, CALL_BACK ASC)	PARAMETERS : CustomIndexInfo(indexName=TEST_INDEX, targetTableName=app_send_data111, columns=SUB_ID DESC, CALL_BACK ASC)
+[ INFO][2023-01-16 11:03:27.543] - app_send_data111 테이블 생성 완료
+[ INFO][2023-01-16 11:03:27.543] - template_code 테이블 생성 시작
+[DEBUG][2023-01-16 11:03:27.549] - MYBATIS_ID : createTable.CUBRID.createTemplateCode, SQL QUERY : CREATE TABLE template_code ( APP_GUBUN VARCHAR(8) NOT NULL, TEMPLATE_CODE VARCHAR(40) NOT NULL, HEAD VARCHAR(500) NOT NULL, FOOT VARCHAR(500), TITLE VARCHAR(100), USE_BUTTON CHAR(1) DEFAULT 'N', CONSTRAINT _PK PRIMARY KEY ( APP_GUBUN, TEMPLATE_CODE ) ) CHARSET UTF8	PARAMETERS : {charset=UTF8, tableName=template_code}
+[ INFO][2023-01-16 11:03:27.550] - template_code 테이블 생성 완료
+[ INFO][2023-01-16 11:03:27.550] - app_send_data_log111 테이블 생성 시작
+[DEBUG][2023-01-16 11:03:27.557] - MYBATIS_ID : createTable.CUBRID.createAppSendDataForLog, SQL QUERY : CREATE TABLE app_send_data_log111 ( MSG_SEQ NUMERIC(11), REQ_SEND_DATE CHAR(14), PACK_UNIQUEKEY NUMERIC(11), PHONE_NUM VARCHAR(12), NURI_MSG_SEQ NUMERIC(11), USER_SEQ NUMERIC(11), CUR_STATE NUMERIC(1) DEFAULT 0, APP_GUBUN VARCHAR(8), CALL_BACK VARCHAR(12), SUB_ID VARCHAR(30), GAON_MSG_TYPE CHAR(1), SMS_MSG_DATA VARCHAR(135), TEMPLATE_CODE VARCHAR(40), RSLT_CODE_APP CHAR(4), MODULE_SEND_TIME CHAR(14), SVR_RECV_TIME CHAR(14), APP_SEND_TIME CHAR(14), APP_RECV_TIME CHAR(14), SERIAL_NUMBER VARCHAR(39), SEND_PACK_UKEY NUMERIC(11) , COLUMN1 VARCHAR(100) )CHARSET UTF8	PARAMETERS : {charset=UTF8, customColumn=COLUMN1 VARCHAR(100), tableName=app_send_data_log111}
+[ INFO][2023-01-16 11:03:27.560] - app_send_data_log111 테이블 생성 완료
+[ INFO][2023-01-16 11:03:27.560] - -----------필요한 테이블 생성 완료-----------
+[DEBUG][2023-01-16 11:03:27.564] - LOG TABLE로 이관 시작
+[DEBUG][2023-01-16 11:03:27.564] - 로그파일 또는 임시 파일 삭제 시작
+[DEBUG][2023-01-16 11:03:27.565] - 로그파일 또는 임시 파일 삭제 완료
+[ INFO][2023-01-16 11:03:27.567] - Gaon Receiver Thread Start port: 30000
+[ INFO][2023-01-16 11:03:27.568] - Gaon Sender Thread Start
+[ INFO][2023-01-16 11:03:27.569] - ID : nanalsmi** 인증 시작
+[DEBUG][2023-01-16 11:03:27.577] - LOG TABLE로 이관 완료
+[ INFO][2023-01-16 11:03:30.037] - 가온 모듈 종료
+[ INFO][2023-01-16 11:06:29.722] - 가온 모듈 시작
+[ INFO][2023-01-16 11:06:29.723] - ExcludeLmsError set empty array
+[ INFO][2023-01-16 11:06:29.728] - PID : 3692
+[ INFO][2023-01-16 11:06:29.728] - 버전 : 2.0.22
+[ INFO][2023-01-16 11:06:29.728] - 로깅 레벨 : DEBUG
+[ INFO][2023-01-16 11:06:29.729] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2023-01-16 11:06:29.729] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2023-01-16 11:06:29.729] - DB_DRIVER_NAME : cubrid.jdbc.driver.CUBRIDDriver
+[ INFO][2023-01-16 11:06:29.729] - DB_URL : jdbc:cubrid:localhost:33000:test:::?charset=UTF-8
+[ INFO][2023-01-16 11:06:29.729] - DB_USER_NAME : te**
+[ INFO][2023-01-16 11:06:29.730] - 누리 CONTENTS_INFO 테이블 이름 : nuri_mms_contents_info
+[ INFO][2023-01-16 11:06:29.730] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:06:29.730] - 누리 MSG_DATA 테이블 이름 : nuri_msg_data
+[ INFO][2023-01-16 11:06:29.730] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:06:29.730] - 가온 SEND_CONTENTS 테이블 이름 : app_send_contents111
+[ INFO][2023-01-16 11:06:29.730] - 가온 SEND_DATA 테이블 이름 : app_send_data111
+[ INFO][2023-01-16 11:06:29.730] - 가온 SEND_DATA LOG 테이블 이름 : app_send_data_log111
+[ INFO][2023-01-16 11:06:29.731] - 가온 TEMPLATE_CODE 테이블 이름 : template_code
+[ INFO][2023-01-16 11:06:29.731] - 앱메시지 실패시 SMS/LMS 발송 여부 : false
+[ INFO][2023-01-16 11:06:29.731] - REALTIME 여부 : true
+[ INFO][2023-01-16 11:06:29.731] - 로그 테이블 생성 옵션 : DEFAULT
+[ INFO][2023-01-16 11:06:29.731] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2023-01-16 11:06:29.731] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2023-01-16 11:06:29.731] - 연락처 별 발송량 제한 : 0
+[ INFO][2023-01-16 11:06:29.732] - 발송 제한 시간 : 000000 ~ 000000
+[ INFO][2023-01-16 11:06:29.732] - 로그 테이블 이관 여부: true
+[ INFO][2023-01-16 11:06:29.732] - LMS 발송 제외 에러 
+[ INFO][2023-01-16 11:06:29.732] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2023-01-16 11:06:29.732] - 접속 시도
+[ INFO][2023-01-16 11:06:29.797] - DB 접속 성공
+[ INFO][2023-01-16 11:06:29.798] - app_send_contents111 테이블 생성 시작
+[DEBUG][2023-01-16 11:06:29.820] - MYBATIS_ID : createTable.CUBRID.createAppSendContents, SQL QUERY : CREATE TABLE app_send_contents111 ( REQ_SEND_DATE CHAR(14), PACK_UNIQUEKEY NUMERIC(11) AUTO_INCREMENT NOT NULL, MSG_SUBJECT VARCHAR(50), MSG_DATA VARCHAR(3000) NOT NULL, MSG_TYPE CHAR(2) NOT NULL, HEADER VARCHAR(32), BTN_CNT NUMERIC(1) DEFAULT 0, ATTACHMENT VARCHAR(5000), LINK_CNT NUMERIC(1) DEFAULT 0, SUPPLEMENT VARCHAR(5000), PHONE_CNT NUMERIC(11) DEFAULT 0 NOT NULL, CUR_STATE NUMERIC(1) DEFAULT 0, CONSTRAINT app_send_contents111_PK1 PRIMARY KEY ( PACK_UNIQUEKEY ) ) CHARSET UTF8	PARAMETERS : {charset=UTF8, tableName=app_send_contents111}
+[ INFO][2023-01-16 11:06:29.821] - app_send_contents111 테이블 생성 완료
+[ INFO][2023-01-16 11:06:29.821] - app_send_data111 테이블 생성 시작
+[DEBUG][2023-01-16 11:06:29.830] - MYBATIS_ID : createTable.CUBRID.createAppSendData, SQL QUERY : CREATE TABLE app_send_data111 ( MSG_SEQ NUMERIC(11) AUTO_INCREMENT NOT NULL, REQ_SEND_DATE CHAR(14) NOT NULL, PACK_UNIQUEKEY NUMERIC(11), PHONE_NUM VARCHAR(12) NOT NULL, NURI_MSG_SEQ NUMERIC(11), USER_SEQ NUMERIC(11), CUR_STATE NUMERIC(1) DEFAULT 0, APP_GUBUN VARCHAR(8) NOT NULL, CALL_BACK VARCHAR(12) NOT NULL, SUB_ID VARCHAR(30), GAON_MSG_TYPE CHAR(1) NOT NULL, SMS_MSG_DATA VARCHAR(135), TEMPLATE_CODE VARCHAR(40) NOT NULL, RSLT_CODE_APP CHAR(4), MODULE_SEND_TIME CHAR(14), SVR_RECV_TIME CHAR(14), APP_SEND_TIME CHAR(14), APP_RECV_TIME CHAR(14), SERIAL_NUMBER VARCHAR(39), SEND_PACK_UKEY NUMERIC(11), COLUMN1 VARCHAR(100), CONSTRAINT app_send_data111_PK PRIMARY KEY ( MSG_SEQ ) )CHARSET UTF8	PARAMETERS : {charset=UTF8, customColumn=COLUMN1 VARCHAR(100),, tableName=app_send_data111}
+[DEBUG][2023-01-16 11:06:29.832] - MYBATIS_ID : common.createUniqueIndex, SQL QUERY : CREATE UNIQUE INDEX app_send_data111_SERIAL_IDX ON app_send_data111 (SERIAL_NUMBER)	PARAMETERS : CustomIndexInfo(indexName=app_send_data111_SERIAL_IDX, targetTableName=app_send_data111, columns=SERIAL_NUMBER)
+[ INFO][2023-01-16 11:06:29.835] - INDEX NAME - TEST_INDEX, TARGET TABLE - app_send_data111, COLUMNS - SUB_ID DESC, CALL_BACK ASC
+[DEBUG][2023-01-16 11:06:29.836] - MYBATIS_ID : common.createIndex, SQL QUERY : CREATE INDEX TEST_INDEX ON app_send_data111 (SUB_ID DESC, CALL_BACK ASC)	PARAMETERS : CustomIndexInfo(indexName=TEST_INDEX, targetTableName=app_send_data111, columns=SUB_ID DESC, CALL_BACK ASC)
+[ INFO][2023-01-16 11:06:29.841] - app_send_data111 테이블 생성 완료
+[ INFO][2023-01-16 11:06:29.841] - template_code 테이블 생성 시작
+[DEBUG][2023-01-16 11:06:29.848] - MYBATIS_ID : createTable.CUBRID.createTemplateCode, SQL QUERY : CREATE TABLE template_code ( APP_GUBUN VARCHAR(8) NOT NULL, TEMPLATE_CODE VARCHAR(40) NOT NULL, HEAD VARCHAR(500) NOT NULL, FOOT VARCHAR(500), TITLE VARCHAR(100), USE_BUTTON CHAR(1) DEFAULT 'N', CONSTRAINT _PK PRIMARY KEY ( APP_GUBUN, TEMPLATE_CODE ) ) CHARSET UTF8	PARAMETERS : {charset=UTF8, tableName=template_code}
+[ INFO][2023-01-16 11:06:29.850] - template_code 테이블 생성 완료
+[ INFO][2023-01-16 11:06:29.851] - app_send_data_log111_202301 테이블 생성 시작
+[DEBUG][2023-01-16 11:06:29.858] - MYBATIS_ID : createTable.CUBRID.createAppSendDataForLog, SQL QUERY : CREATE TABLE app_send_data_log111_202301 ( MSG_SEQ NUMERIC(11), REQ_SEND_DATE CHAR(14), PACK_UNIQUEKEY NUMERIC(11), PHONE_NUM VARCHAR(12), NURI_MSG_SEQ NUMERIC(11), USER_SEQ NUMERIC(11), CUR_STATE NUMERIC(1) DEFAULT 0, APP_GUBUN VARCHAR(8), CALL_BACK VARCHAR(12), SUB_ID VARCHAR(30), GAON_MSG_TYPE CHAR(1), SMS_MSG_DATA VARCHAR(135), TEMPLATE_CODE VARCHAR(40), RSLT_CODE_APP CHAR(4), MODULE_SEND_TIME CHAR(14), SVR_RECV_TIME CHAR(14), APP_SEND_TIME CHAR(14), APP_RECV_TIME CHAR(14), SERIAL_NUMBER VARCHAR(39), SEND_PACK_UKEY NUMERIC(11) , COLUMN1 VARCHAR(100) )CHARSET UTF8	PARAMETERS : {charset=UTF8, customColumn=COLUMN1 VARCHAR(100), tableName=app_send_data_log111_202301}
+[ INFO][2023-01-16 11:06:29.860] - app_send_data_log111_202301 테이블 생성 완료
+[ INFO][2023-01-16 11:06:29.860] - -----------필요한 테이블 생성 완료-----------
+[DEBUG][2023-01-16 11:06:29.863] - LOG TABLE로 이관 시작
+[DEBUG][2023-01-16 11:06:29.863] - 로그파일 또는 임시 파일 삭제 시작
+[DEBUG][2023-01-16 11:06:29.863] - 로그파일 또는 임시 파일 삭제 완료
+[ INFO][2023-01-16 11:06:29.866] - Gaon Receiver Thread Start port: 30000
+[ INFO][2023-01-16 11:06:29.868] - Gaon Sender Thread Start
+[ INFO][2023-01-16 11:06:29.869] - ID : nanalsmi** 인증 시작
+[DEBUG][2023-01-16 11:06:29.877] - LOG TABLE로 이관 완료
+[ INFO][2023-01-16 11:06:34.879] - 가온 모듈 기동 중
+[ INFO][2023-01-16 11:06:38.543] - 가온 모듈 종료
+[ INFO][2023-01-16 11:08:51.413] - 가온 모듈 시작
+[ INFO][2023-01-16 11:08:51.414] - ExcludeLmsError set empty array
+[ INFO][2023-01-16 11:08:51.418] - PID : 22840
+[ INFO][2023-01-16 11:08:51.418] - 버전 : 2.0.22
+[ INFO][2023-01-16 11:08:51.418] - 로깅 레벨 : DEBUG
+[ INFO][2023-01-16 11:08:51.419] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2023-01-16 11:08:51.419] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2023-01-16 11:08:51.419] - DB_DRIVER_NAME : cubrid.jdbc.driver.CUBRIDDriver
+[ INFO][2023-01-16 11:08:51.420] - DB_URL : jdbc:cubrid:localhost:33000:test:::?charset=UTF-8
+[ INFO][2023-01-16 11:08:51.420] - DB_USER_NAME : te**
+[ INFO][2023-01-16 11:08:51.420] - 누리 CONTENTS_INFO 테이블 이름 : nuri_mms_contents_info
+[ INFO][2023-01-16 11:08:51.420] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:08:51.420] - 누리 MSG_DATA 테이블 이름 : nuri_msg_data
+[ INFO][2023-01-16 11:08:51.420] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2023-01-16 11:08:51.420] - 가온 SEND_CONTENTS 테이블 이름 : app_send_contents111
+[ INFO][2023-01-16 11:08:51.421] - 가온 SEND_DATA 테이블 이름 : app_send_data111
+[ INFO][2023-01-16 11:08:51.421] - 가온 SEND_DATA LOG 테이블 이름 : app_send_data_log111
+[ INFO][2023-01-16 11:08:51.421] - 가온 TEMPLATE_CODE 테이블 이름 : template_code
+[ INFO][2023-01-16 11:08:51.421] - 앱메시지 실패시 SMS/LMS 발송 여부 : false
+[ INFO][2023-01-16 11:08:51.421] - REALTIME 여부 : true
+[ INFO][2023-01-16 11:08:51.421] - 로그 테이블 생성 옵션 : DEFAULT
+[ INFO][2023-01-16 11:08:51.422] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2023-01-16 11:08:51.422] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2023-01-16 11:08:51.422] - 연락처 별 발송량 제한 : 0
+[ INFO][2023-01-16 11:08:51.422] - 발송 제한 시간 : 000000 ~ 000000
+[ INFO][2023-01-16 11:08:51.422] - 로그 테이블 이관 여부: true
+[ INFO][2023-01-16 11:08:51.422] - LMS 발송 제외 에러 
+[ INFO][2023-01-16 11:08:51.423] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2023-01-16 11:08:51.423] - 접속 시도
+[ INFO][2023-01-16 11:08:51.467] - DB 접속 성공
+[ INFO][2023-01-16 11:08:51.467] - app_send_contents111 테이블 생성 시작
+[ERROR][2023-01-16 11:08:51.513] - 테이블 생성 에러
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: cubrid.jdbc.driver.CUBRIDException: Semantic: Invalid character set. create class [test.app_send_contents111] ( REQ_SEND_DATE cha...[CAS INFO-localhost:33000,3,17308],[SESSION-125],[URL-jdbc:cubrid:localhost:33000:test:test:********:?charset=UTF-8].
+### The error may exist in class path resource [mybatis/mapper/createTable-cubrid_mapper.xml]
+### The error may involve createTable.CUBRID.createAppSendContents
+### The error occurred while executing a query
+### SQL: CREATE TABLE app_send_contents111         (         REQ_SEND_DATE CHAR(14),         PACK_UNIQUEKEY NUMERIC(11) AUTO_INCREMENT NOT NULL,         MSG_SUBJECT VARCHAR(50),         MSG_DATA VARCHAR(3000) NOT NULL,         MSG_TYPE CHAR(2) NOT NULL,         HEADER VARCHAR(32),         BTN_CNT NUMERIC(1) DEFAULT 0,         ATTACHMENT VARCHAR(5000),         LINK_CNT NUMERIC(1) DEFAULT 0,         SUPPLEMENT VARCHAR(5000),         PHONE_CNT NUMERIC(11) DEFAULT 0 NOT NULL,         CUR_STATE NUMERIC(1) DEFAULT 0,                   CONSTRAINT app_send_contents111_PK1 PRIMARY KEY         (         PACK_UNIQUEKEY         )         ) CHARSET 'ko_KR.UTF8'
+### Cause: cubrid.jdbc.driver.CUBRIDException: Semantic: Invalid character set. create class [test.app_send_contents111] ( REQ_SEND_DATE cha...[CAS INFO-localhost:33000,3,17308],[SESSION-125],[URL-jdbc:cubrid:localhost:33000:test:test:********:?charset=UTF-8].
+; bad SQL grammar []; nested exception is cubrid.jdbc.driver.CUBRIDException: Semantic: Invalid character set. create class [test.app_send_contents111] ( REQ_SEND_DATE cha...[CAS INFO-localhost:33000,3,17308],[SESSION-125],[URL-jdbc:cubrid:localhost:33000:test:test:********:?charset=UTF-8].
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:230)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:73)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy23.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:166)
+	at com.nanal.db.impl.DBCommonImpl.createAppSendContents(DBCommonImpl.java:77)
+	at com.nanal.db.initializer.Initializer.initialize(Initializer.java:180)
+	at com.nanal.Main.main(Main.java:72)
+Caused by: cubrid.jdbc.driver.CUBRIDException: Semantic: Invalid character set. create class [test.app_send_contents111] ( REQ_SEND_DATE cha...[CAS INFO-localhost:33000,3,17308],[SESSION-125],[URL-jdbc:cubrid:localhost:33000:test:test:********:?charset=UTF-8].
+	at cubrid.jdbc.jci.UConnection.createJciException(UConnection.java:2010)
+	at cubrid.jdbc.jci.UInputBuffer.<init>(UInputBuffer.java:172)
+	at cubrid.jdbc.jci.UConnection.send_recv_msg(UConnection.java:1869)
+	at cubrid.jdbc.jci.UConnection.send_recv_msg(UConnection.java:1881)
+	at cubrid.jdbc.jci.UConnection.prepareInternal(UConnection.java:1351)
+	at cubrid.jdbc.jci.UConnection.prepare(UConnection.java:836)
+	at cubrid.jdbc.jci.UConnection.prepare(UConnection.java:818)
+	at cubrid.jdbc.driver.CUBRIDConnection.prepare(CUBRIDConnection.java:671)
+	at cubrid.jdbc.driver.CUBRIDConnection.prepare(CUBRIDConnection.java:842)
+	at cubrid.jdbc.driver.CUBRIDConnection.prepareStatement(CUBRIDConnection.java:153)
+	at org.apache.commons.dbcp.DelegatingConnection.prepareStatement(DelegatingConnection.java:281)
+	at org.apache.commons.dbcp.PoolingDataSource$PoolGuardConnectionWrapper.prepareStatement(PoolingDataSource.java:313)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.instantiateStatement(PreparedStatementHandler.java:87)
+	at org.apache.ibatis.executor.statement.BaseStatementHandler.prepare(BaseStatementHandler.java:88)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.prepare(RoutingStatementHandler.java:59)
+	at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:85)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	... 5 more

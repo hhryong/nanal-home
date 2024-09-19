@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lms.TIBERO">
+    <select id="getNextValue" resultType="long">
+        select ${value}.nextval
+        FROM DUAL
+    </select>
+
+    <insert id="insertContentsInfoAuto" useGeneratedKeys="true" keyColumn="CONT_SEQ" keyProperty="contSeq"
+            parameterType="LmsContentsInfo">
+        INSERT INTO ${tableName}
+        (FILE_CNT,
+        <if test="lmsSubject != null and lmsSubject != ''">
+            MMS_SUBJECT,
+        </if>
+        MMS_BODY,
+        SERVICE_DEP1)
+        VALUES (1,
+        <if test="lmsSubject != null and lmsSubject != ''">
+            #{lmsSubject},
+        </if>
+        #{lmsBody},
+        'ALL')
+    </insert>
+
+
+    <insert id="insertContentsInfo" parameterType="HashMap">
+        INSERT INTO ${tableName}
+        (CONT_SEQ,
+        FILE_CNT,
+        <if test="lmsSubject != null and lmsSubject != ''">
+            MMS_SUBJECT,
+        </if>
+        MMS_BODY,
+        SERVICE_DEP1)
+        VALUES (#{contSeq},
+        1,
+        <if test="lmsSubject != null and lmsSubject != ''">
+            #{lmsSubject},
+        </if>
+        #{lmsBody},
+        'ALL')
+    </insert>
+
+    <insert id="insertMsgDataAuto" useGeneratedKeys="true" keyColumn="MSG_SEQ" keyProperty="msgSeq"
+            parameterType="LmsDataInfo">
+        INSERT INTO ${tableName} (CUR_STATE,
+        REQ_DATE,
+        CALL_TO,
+        CALL_FROM,
+        MSG_TYPE,
+        <if test="subId != null and subId != ''">
+            SUB_ID,
+        </if>
+        CONT_SEQ)
+        VALUES (0, SYSDATE, #{callTo}, #{callFrom}, 6,
+        <if test="subId != null and subId != ''">
+            #{subId},
+        </if>
+        #{contSeq})
+    </insert>
+
+    <insert id="insertMsgData" parameterType="LmsDataInfo">
+        INSERT INTO ${tableName} (MSG_SEQ,
+        CUR_STATE,
+        REQ_DATE,
+        CALL_TO,
+        CALL_FROM,
+        MSG_TYPE,
+        <if test="subId != null and subId != ''">
+            SUB_ID,
+        </if>
+        CONT_SEQ)
+        VALUES (#{msgSeq}, 0, SYSDATE, #{callTo}, #{callFrom}, 6,
+        <if test="subId != null and subId != ''">
+            #{subId},
+        </if>
+        #{contSeq})
+    </insert>
+
+    <insert id="insertSmsMsgDataAuto" useGeneratedKeys="true" keyColumn="MSG_SEQ" keyProperty="msgSeq"
+            parameterType="LmsDataInfo">
+        INSERT INTO ${tableName} (CUR_STATE,
+        REQ_DATE,
+        CALL_TO,
+        CALL_FROM,
+        MSG_TYPE,
+        <if test="subId != null and subId != ''">
+            SUB_ID,
+        </if>
+        SMS_TXT)
+        VALUES (0, SYSDATE, #{callTo}, #{callFrom}, 4,
+        <if test="subId != null and subId != ''">
+            #{subId},
+        </if>
+        #{smsTxt})
+    </insert>
+
+    <insert id="insertSmsMsgData" parameterType="LmsDataInfo">
+        INSERT INTO ${tableName} (MSG_SEQ,
+        CUR_STATE,
+        REQ_DATE,
+        CALL_TO,
+        CALL_FROM,
+        MSG_TYPE,
+        <if test="subId != null and subId != ''">
+            SUB_ID,
+        </if>
+        SMS_TXT)
+        VALUES (#{msgSeq}, 0, SYSDATE, #{callTo}, #{callFrom}, 4,
+        <if test="subId != null and subId != ''">
+            #{subId},
+        </if>
+        #{smsTxt})
+    </insert>
+    
+    <!-- 사용자 정의 컬럼 포함 삽입 -->
+    <!-- 사용자 정의 컬럼 포함 SMS 발송-->
+    <insert id="insertMsgDataSmsWithCustomColumn" parameterType="HashMap">
+        INSERT INTO ${NURI_MSG_DATA_TABLE_NAME}
+        (
+            MSG_SEQ,
+            CUR_STATE,
+            REQ_DATE,
+            CALL_TO,
+            CALL_FROM,
+            MSG_TYPE,
+            SUB_ID,
+            SMS_TXT
+            <if test="CUSTOM_COLUMN_KEY_LIST != null">
+                <foreach item="key" collection="CUSTOM_COLUMN_KEY_LIST" open="," separator=",">
+                    ${key}
+                </foreach>
+            </if>
+        )
+        VALUES 
+        (
+            #{NURI_MSG_SEQ},
+            0,
+            SYSDATE, 
+            #{PHONE_NUM}, 
+            #{CALL_BACK}, 
+            4,
+            #{SUB_ID},
+            #{SMS_MSG_DATA}
+            <if test="CUSTOM_COLUMN_VALUE_LIST != null">
+                <foreach item="key" collection="CUSTOM_COLUMN_VALUE_LIST" open="," separator=",">
+                    #{key}
+                </foreach>
+            </if>
+        )
+    </insert>
+    
+    
+    <insert id="insertMsgDataSmsWithCustomColumnAuto" parameterType="LmsDataInfo"
+            useGeneratedKeys="true" 
+            keyColumn="MSG_SEQ" 
+            keyProperty="NURI_MSG_SEQ">
+        INSERT INTO ${NURI_MSG_DATA_TABLE_NAME}
+        (
+            CUR_STATE,
+            REQ_DATE,
+            CALL_TO,
+            CALL_FROM,
+            MSG_TYPE,
+            SUB_ID,
+            SMS_TXT
+            <if test="CUSTOM_COLUMN_KEY_LIST != null">
+                <foreach item="key" collection="CUSTOM_COLUMN_KEY_LIST" open="," separator=",">
+                    ${key}
+                </foreach>
+            </if>
+        )
+        VALUES 
+        (
+            0,
+            SYSDATE, 
+            #{PHONE_NUM}, 
+            #{CALL_BACK}, 
+            4,
+            #{SUB_ID},
+            #{SMS_MSG_DATA}
+            <if test="CUSTOM_COLUMN_VALUE_LIST != null">
+                <foreach item="value" collection="CUSTOM_COLUMN_VALUE_LIST" open="," separator=",">
+                    #{value}
+                </foreach>
+            </if>
+        )
+    </insert>
+    
+    <!-- 사용자 정의컬럼 포함 LMS발송 -->
+    <insert id="insertContentsInfoWithCustomColumnAuto"
+            useGeneratedKeys="true"
+            keyColumn="CONT_SEQ"
+            keyProperty="CONT_SEQ"
+            parameterType="HashMap">
+        INSERT INTO ${NURI_CONTENT_INFO_TABLE_NAME}
+        (
+            FILE_CNT,
+            MMS_SUBJECT,
+            MMS_BODY,
+            SERVICE_DEP1
+        )
+        VALUES 
+        (
+            1,
+            #{MSG_SUBJECT},
+            #{MSG_DATA},
+            'ALL'
+        )
+    </insert>
+
+
+    <insert id="insertContentsInfoWithCustomColumn" parameterType="HashMap">
+        INSERT INTO ${NURI_CONTENT_INFO_TABLE_NAME}
+        (
+            CONT_SEQ,
+            FILE_CNT,
+            MMS_SUBJECT,
+            MMS_BODY,
+            SERVICE_DEP1
+        )
+        VALUES 
+        (
+            #{CONT_SEQ},
+            1,
+            #{MSG_SUBJECT},
+            #{MSG_DATA},
+            'ALL'
+        )
+    </insert>
+
+    <insert id="insertMsgDataWithCustomColumnAuto"
+            useGeneratedKeys="true"
+            keyColumn="MSG_SEQ"
+            keyProperty="NURI_MSG_SEQ"
+            parameterType="HashMap">
+        INSERT INTO ${NURI_MSG_DATA_TABLE_NAME} 
+        (
+            CUR_STATE,
+            REQ_DATE,
+            CALL_TO,
+            CALL_FROM,
+            MSG_TYPE,
+            SUB_ID,
+            CONT_SEQ
+            <if test="CUSTOM_COLUMN_KEY_LIST != null">
+                <foreach item="key" collection="CUSTOM_COLUMN_KEY_LIST" open="," separator=",">
+                    ${key}
+                </foreach>
+            </if>
+        )
+        VALUES 
+        (
+            0, 
+            SYSDATE, 
+            #{PHONE_NUM}, 
+            #{CALL_BACK}, 
+            6,
+            #{SUB_ID},
+            #{CONT_SEQ}
+            <if test="CUSTOM_COLUMN_VALUE_LIST != null">
+                <foreach item="value" collection="CUSTOM_COLUMN_VALUE_LIST" open="," separator=",">
+                    #{value}
+                </foreach>
+            </if>
+        )
+    </insert>
+
+    <insert id="insertMsgDataWithCustomColumn" parameterType="HashMap">
+        INSERT INTO ${NURI_MSG_DATA_TABLE_NAME} 
+        (
+            MSG_SEQ,
+            CUR_STATE,
+            REQ_DATE,
+            CALL_TO,
+            CALL_FROM,
+            MSG_TYPE,
+            SUB_ID,
+            CONT_SEQ
+            <if test="CUSTOM_COLUMN_KEY_LIST != null">
+                <foreach item="key" collection="CUSTOM_COLUMN_KEY_LIST" open="," separator=",">
+                    ${key}
+                </foreach>
+            </if>
+        )
+        VALUES 
+        (
+            #{NURI_MSG_SEQ}, 
+            0, 
+            SYSDATE, 
+            #{PHONE_NUM}, 
+            #{CALL_BACK}, 
+            6,
+            #{SUB_ID},
+            #{CONT_SEQ}
+            <if test="CUSTOM_COLUMN_VALUE_LIST != null">
+                <foreach item="value" collection="CUSTOM_COLUMN_VALUE_LIST" open="," separator=",">
+                    #{value}
+                </foreach>
+            </if>
+        )
+    </insert>
+    
+    <select id="checkExsitContentsInfo" parameterType="HashMap" resultType="long">
+        SELECT 
+            COUNT(*)
+        FROM
+            ${NURI_CONTENT_INFO_TABLE_NAME}
+        WHERE
+            CONT_SEQ = #{CONT_SEQ}
+    </select>
+</mapper>

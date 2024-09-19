@@ -1,0 +1,29 @@
+[ INFO][2022-12-13 13:08:19.960] - 가온 모듈 시작
+[ INFO][2022-12-13 13:08:19.970] - ExcludeLmsError set empty array
+[ INFO][2022-12-13 13:08:20.042] - PID : 12336
+[ INFO][2022-12-13 13:08:20.049] - 버전 : 2.0.21
+[ INFO][2022-12-13 13:08:20.050] - 로깅 레벨 : DEBUG
+[ INFO][2022-12-13 13:08:20.060] - 게이트웨이 URL(1) : 192.xxx.xxx.102:30000
+[ INFO][2022-12-13 13:08:20.061] - 게이트웨이 CLIENT ID : nanalsmi**
+[ INFO][2022-12-13 13:08:20.062] - DB_DRIVER_NAME : com.mysql.jdbc.Driver
+[ INFO][2022-12-13 13:08:20.065] - DB_URL : jdbc:mysql://119.xxx.xxx.186:3306/test_nuri?useSSL=false&useUnicode=true&characterEncoding=utf8
+[ INFO][2022-12-13 13:08:20.100] - DB_USER_NAME : test_nu**
+[ INFO][2022-12-13 13:08:20.129] - 누리 CONTENTS_INFO 테이블 이름 : NURI_MMS_CONTENTS_INFO
+[ INFO][2022-12-13 13:08:20.146] - 누리 CONTENTS_INFO 시퀸스 : DEFAULT
+[ INFO][2022-12-13 13:08:20.180] - 누리 MSG_DATA 테이블 이름 : NURI_MSG_DATA
+[ INFO][2022-12-13 13:08:20.215] - 누리 MSG_DATA 시퀸스 : DEFAULT
+[ INFO][2022-12-13 13:08:20.233] - 가온 SEND_CONTENTS 테이블 이름 : APP_SEND_CONTENTS111
+[ INFO][2022-12-13 13:08:20.255] - 가온 SEND_DATA 테이블 이름 : APP_SEND_DATA111
+[ INFO][2022-12-13 13:08:20.302] - 가온 SEND_DATA LOG 테이블 이름 : APP_SEND_DATA_LOG111
+[ INFO][2022-12-13 13:08:20.318] - 가온 TEMPLATE_CODE 테이블 이름 : TEMPLATE_CODE
+[ INFO][2022-12-13 13:08:20.349] - 앱메시지 실패시 SMS/LMS 발송 여부 : false
+[ INFO][2022-12-13 13:08:20.365] - REALTIME 여부 : true
+[ INFO][2022-12-13 13:08:20.376] - 로그 테이블 생성 옵션 : ONE
+[ INFO][2022-12-13 13:08:20.391] - 데이터 로그테이블로 이관 여부 : true
+[ INFO][2022-12-13 13:08:20.397] - DB에서 한번에 불러올 최대 행 수 : 100
+[ INFO][2022-12-13 13:08:20.397] - 연락처 별 발송량 제한 : 0
+[ INFO][2022-12-13 13:08:20.402] - 발송 제한 시간 : 000000 ~ 000000
+[ INFO][2022-12-13 13:08:20.403] - 로그 테이블 이관 여부: true
+[ INFO][2022-12-13 13:08:20.404] - LMS 발송 제외 에러 
+[ INFO][2022-12-13 13:08:20.405] - -----------필요한 테이블 생성 시작-----------
+[ INFO][2022-12-13 13:08:20.407] - 접속 시도
